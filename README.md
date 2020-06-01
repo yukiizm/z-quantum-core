@@ -1,4 +1,4 @@
-# z-quantum-core
+# z-quantum-core MASTER
 
 ## What is it?
 
