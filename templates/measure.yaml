@@ -26,15 +26,22 @@ spec:
           data: |
             from zquantum.core.utils import create_object
             from zquantum.core.circuit import load_circuit
+            import time
 
             circuit = load_circuit('circuit.json')
             backend_specs = {{inputs.parameters.backend-specs}}
             backend = create_object(backend_specs)
 
+            start = time.time()
             measurements = backend.run_circuit_and_measure(circuit)
+            end = time.time()
 
+            with open("time.json", "w") as f:
+                f.write({"time": end-start})
             measurements.save("measurements.json")
     outputs:
       artifacts:
       - name: measurements
         path: /app/measurements.json
+      - name: time
+        path: /app/time.json
