@@ -37,7 +37,7 @@ spec:
             end = time.time()
 
             with open("time.json", "w") as f:
-                f.write("{'time': end-start}")
+                f.write("{'time': end-start, "schema": "timing"}")
             measurements.save("measurements.json")
     outputs:
       artifacts:
