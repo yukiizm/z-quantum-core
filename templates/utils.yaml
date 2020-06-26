@@ -28,7 +28,6 @@ spec:
         default: 0
       - name: stop
       - name: step
-        default: 1
       - name: command
         value: python3 main_script.py
       artifacts:
@@ -38,11 +37,12 @@ spec:
           data: |
             import numpy as np
             import json
-            values = np.arange({{inputs.parameters.start}},
-                              {{inputs.parameters.stop}} + {{inputs.parameters.step}}/2,
-                              {{inputs.parameters.step}})
-            with open('values.txt', 'w') as f:
-              f.write(json.dumps(list(values)))
+            start = int({{inputs.parameters.start}})
+            stop = int({{inputs.parameters.stop}})
+            step = int({{inputs.parameters.step}})
+            values = list(np.arange(start, stop + step / 2, step))
+            with open("values.txt", "w") as f:
+                f.write(json.dumps(values))
     outputs:
       parameters:
       - name: values
