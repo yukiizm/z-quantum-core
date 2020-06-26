@@ -20,3 +20,32 @@ spec:
         valueFrom:
           path: /app/result.txt
 
+  - name: generate-range
+    parent: generic-task
+    inputs:
+      parameters:
+      - name: start
+        default: 0
+      - name: stop
+      - name: step
+        default: 1
+      - name: command
+        value: python3 main_script.py
+      artifacts:
+      - name: main-script
+        path: /app/main_script.py
+        raw:
+          data: |
+            import numpy as np
+            import json
+            values = np.arange({{inputs.parameters.start}},
+                              {{inputs.parameters.stop}} + {{inputs.parameters.step}}/2,
+                              {{inputs.parameters.step}})
+            with open('values.txt', 'w') as f:
+              f.write(json.dumps(list(values)))
+    outputs:
+      parameters:
+      - name: values
+        valueFrom:
+          path: /app/values.txt          
+
