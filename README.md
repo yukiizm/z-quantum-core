@@ -1,4 +1,4 @@
-# z-quantum-corn
+# z-quantum-core
 
 ## What is it?
 
