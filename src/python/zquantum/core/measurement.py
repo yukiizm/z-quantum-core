@@ -457,12 +457,30 @@ class Measurements:
                 NOTE: bitstrings are also indexed from 0 -> N-1, where the "001" bitstring represents a measurement of 
                     qubit 2 in the 1 state
         """
+        print(
+            f"""ibm_debug:
+            z-quantum-core:measurement.py:add_counts:
+            counts: {counts}.
+            self.bitstrings (BEFORE): {self.bitstrings}.
+            """
+        )
         for bitstring in counts.keys():
             measurement = []
             for bitvalue in bitstring:
                 measurement.append(int(bitvalue))
 
+            print(
+                f"""ibm_debug:
+                z-quantum-core:measurement.py:add_counts:
+                measurement: {measurement}."""
+            )
             self.bitstrings += [tuple(measurement)] * counts[bitstring]
+        print(
+            f"""ibm_debug:
+            z-quantum-core:measurement.py:add_counts:
+            self.bitstrings (AFTER): {self.bitstrings}.
+            """
+        )
 
     def get_distribution(self):
         """ Get the normalized probability distribution representing the measurements
@@ -514,6 +532,7 @@ class Measurements:
                 expectation += np.real(coefficient) * value
             expectation_values.append(np.real(expectation))
         return ExpectationValues(np.array(expectation_values))
+
 
 def concatenate_expectation_values(
     expectation_values_set: Iterable[ExpectationValues],
