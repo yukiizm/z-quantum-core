@@ -18,15 +18,31 @@ spec:
           - name: command
             value: python3 main_script.py
         artifacts:
+          - name: ordering
+            path: /app/ordering.json
+            optional: true
+          - name: layers
+            path: /app/layers.json
+            optional: true
           - name: main-script
             path: /app/main_script.py
             raw:
               data: |
+                import os
                 import numpy as np
-                from zquantum.core.circuit import save_circuit_template_params
+                from zquantum.core.circuit import save_circuit_template_params, load_circuit_ordering, load_circuit_layers
                 from zquantum.core.utils import create_object
                 if {{inputs.parameters.ansatz-specs}} is not None:
                   ansatz_specs = {{inputs.parameters.ansatz-specs}}
+
+                  if os.path.isfile('./ordering.json'):
+                    ordering = load_circuit_ordering('./ordering.json')
+                    ansatz_specs['ordering'] = ordering
+
+                  if os.path.isfile('./layers.json'):
+                    layers = load_circuit_layers('./layers.json')
+                    ansatz_specs['layers'] = layers
+
                   ansatz = create_object(ansatz_specs)
                   number_of_params = ansatz.number_of_params
                 elif {{inputs.parameters.number-of-params}} is not None:
