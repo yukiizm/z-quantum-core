@@ -42,7 +42,7 @@ def compute_kl_divergence(
         )
 
         value -= target_bitstring_value * math.log(
-            max(epsilon, target_bistring_value)
+            max(epsilon, target_bitstring_value)
         )
 
     return -value
