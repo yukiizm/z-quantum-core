@@ -89,7 +89,7 @@ spec:
         parameters:
           - name: num-of-subsets
             default: 2
-          - name: subset-index:
+          - name: subset-index
             default: 1
           - name: command
             value: python3 main_script.py
