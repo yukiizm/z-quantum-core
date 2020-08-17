@@ -118,6 +118,19 @@ def combine_ansatz_params(params1: np.ndarray, params2: np.ndarray) -> np.ndarra
     """
     return np.concatenate((params1, params2))
 
+def split_ansatz_params(params: np.ndarray, num_of_subsets: int, index: int) -> np.ndarray:
+    """Split one set of ansatz parameters into "num_of_subsets" subsets and keep only the the subset specified by "index".
+       Note1: The indexing in the argument is NOT pythonic, i.e. it starts at 1, not 0.
+       Note2: One needs to take into account the layered nature of the ansatz. Therefore, not all integers are possible for "num_of_subsets".
+       
+    Args:
+        params (numpy.ndarray): the set of parameters to be split
+        
+    Returns:
+        numpy.ndarray: one of the subsets of parameters, as specified by the "index" argument
+    """
+    return np.split(params, num_of_subsets)[index-1]
+
 
 class ParameterGrid:
     """A class representing a grid of parameter values to be used in a grid search.
