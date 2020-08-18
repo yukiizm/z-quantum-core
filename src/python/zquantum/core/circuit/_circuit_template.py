@@ -128,9 +128,11 @@ def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> np.ndarray:
     Returns:
         list of numpy.ndarrays: each subarray contains the parameters of one subset
     """
-    print("params before splitting", params)
+    print("params before splitting")
+    print(params)
     split_params = np.split(params, num_of_subsets)
-    print("params after splitting", split_params)
+    print("params after splitting")
+    print(split_params)
     return split_params
 
 
