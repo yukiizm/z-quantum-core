@@ -93,7 +93,7 @@ spec:
             value: python3 main_script.py
         artifacts:
           - name: params
-            path: /app/params.json
+            path: /app/optimized_params.json
           - name: main-script
             path: /app/main_script.py
             raw:
