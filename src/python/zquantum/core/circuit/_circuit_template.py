@@ -131,9 +131,6 @@ def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> np.ndarray:
     print("params before splitting", params)
     split_params = np.split(params, num_of_subsets)
     print("params after splitting", split_params)
-    assert len(split_params[0]) == len(split_params[1])
-    for i in range(len(split_params[0])):
-        assert len(split_params[0][i]) == len(split_params[1][i])
     return split_params
 
 
