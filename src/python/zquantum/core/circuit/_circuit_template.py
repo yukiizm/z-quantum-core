@@ -133,7 +133,7 @@ def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> (np.ndarray,
     split_params = np.split(params, num_of_subsets)
     print("params after splitting")
     print("split_params1: ", split_params[0], "split_params2: ", split_params[1])
-    return (split_params[0], splIt_params[1])
+    return (split_params[0], split_params[1])
 
 
 class ParameterGrid:
