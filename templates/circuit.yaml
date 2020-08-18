@@ -92,14 +92,14 @@ spec:
           - name: command
             value: python3 main_script.py
         artifacts:
-          - name: params
+          - name: optimized-params
             path: /app/optimized_params.json
           - name: main-script
             path: /app/main_script.py
             raw:
               data: |
                 from zquantum.core.circuit import split_ansatz_params, load_circuit_template_params, save_circuit_template_params
-                params = load_circuit_template_params('params.json')
+                params = load_circuit_template_params('optimized_params.json')
                 # need to make the number of output artifacts variable
                 split_params1 = split_ansatz_params(params, {{inputs.parameters.num-of-subsets}})[0]
                 split_params2 = split_ansatz_params(params, {{inputs.parameters.num-of-subsets}})[1]
