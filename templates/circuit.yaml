@@ -82,7 +82,7 @@ spec:
           - name: combined-params
             path: /app/combined_params.json
 
-    # Split ansatz parameters and keep only a subset of them
+    # Split ansatz parameters into subsets of parameters
     - name: split-ansatz-params
       parent: generic-task
       inputs:
@@ -101,8 +101,7 @@ spec:
                 from zquantum.core.circuit import split_ansatz_params, load_circuit_template_params, save_circuit_template_params
                 params = load_circuit_template_params('params.json')
                 # need to make the number of output artifacts variable
-                split_params1 = split_ansatz_params(params, {{inputs.parameters.num-of-subsets}})[0]
-                split_params2 = split_ansatz_params(params, {{inputs.parameters.num-of-subsets}})[1]
+                split_params1, split_params2 = split_ansatz_params(params, {{inputs.parameters.num-of-subsets}})
                 save_circuit_template_params(split_params1, 'split_params1.json')
                 save_circuit_template_params(split_params2, 'split_params2.json')
       outputs:
