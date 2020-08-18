@@ -118,9 +118,9 @@ def combine_ansatz_params(params1: np.ndarray, params2: np.ndarray) -> np.ndarra
     """
     return np.concatenate((params1, params2))
 
-def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> np.ndarray:
+def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> (np.ndarray, np.ndarray):
     """Split one set of ansatz parameters into "num_of_subsets" subsets of parameters.
-       Note1: One needs to take into account the layered nature of the ansatz. Therefore, not all integers make sense for "num_of_subsets".
+       Note: One needs to take into account the layered nature of the ansatz. Therefore, not all integers make sense for "num_of_subsets".
        
     Args:
         params (numpy.ndarray): the set of parameters to be split; for example, the output of an optimization step
@@ -128,12 +128,12 @@ def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> np.ndarray:
     Returns:
         list of numpy.ndarrays: each subarray contains the parameters of one subset
     """
-    print("params before splitting")
+    print("params before splitting:")
     print(params)
     split_params = np.split(params, num_of_subsets)
     print("params after splitting")
-    print(split_params)
-    return split_params
+    print("split_params1: ", split_params[0], "split_params2: ", split_params[1])
+    return (split_params[0], splIt_params[1])
 
 
 class ParameterGrid:
