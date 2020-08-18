@@ -132,7 +132,7 @@ def split_ansatz_params(params: np.ndarray, num_of_subsets: int) -> np.ndarray:
     assert len(split_params[0]) == len(split_params[1])
     for i in range(len(split_params)):
         assert len(split_params[0][i]) == len(split_params[1][i])
-    return np.split(params, num_of_subsets)
+    return split_params
 
 
 class ParameterGrid:
