@@ -579,7 +579,7 @@ class Gate(object):
                 qiskit.extensions.standard.HGate(),
                 [qiskit_qubits[1]],
                 [],
-                qiskit.extensions.standard.RZZGate(params[0]),
+                customZZGate(),
                 [qiskit_qubits[0], qiskit_qubits[1]],
                 [],
                 qiskit.extensions.standard.HGate(),
@@ -1053,4 +1053,20 @@ class MCRY(MCTGate):
         """
         self.ccx_decomposition.mcry(self.phase, self.qiskit_ctrl_q, self.qiskit_targ_q, self.qiskit_ancilla_q)
 
-     
+
+
+
+
+
+
+from qiskit.circuit import Gate as QiskitGate
+from qiskit.extensions.standard.u1 import U1Gate
+from qiskit.extensions.standard.cx import CnotGate
+
+class customZZGate(QiskitGate):
+    """Two-qubit ZZ-rotation gate."""
+
+    def __init__(self):
+        """Create new rzz gate."""
+        super().__init__("ZZ", 2, [],label='ZZ')
+
