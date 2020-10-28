@@ -545,7 +545,7 @@ class Gate(object):
                 [qiskit_qubits[0], qiskit_qubits[1]],
                 [],
             ]
-        if self.name == "XX":
+        if self.name == "XX_old":
             # Hard-coded decomposition is used for now. The compilation is inspired by the approach described in arXiv:1001.3855 [quant-ph]
             return [
                 qiskit.extensions.standard.HGate(),
@@ -570,6 +570,26 @@ class Gate(object):
                 [qiskit_qubits[1]],
                 [],
             ]
+        if self.name == "XX":
+            # Hard-coded decomposition is used for now. The compilation is inspired by the approach described in arXiv:1001.3855 [quant-ph]
+            return [
+                qiskit.extensions.standard.HGate(),
+                [qiskit_qubits[0]],
+                [],
+                qiskit.extensions.standard.HGate(),
+                [qiskit_qubits[1]],
+                [],
+                qiskit.extensions.standard.RZZGate(params[0]),
+                [qiskit_qubits[1]],
+                [],
+                qiskit.extensions.standard.HGate(),
+                [qiskit_qubits[0]],
+                [],
+                qiskit.extensions.standard.HGate(),
+                [qiskit_qubits[1]],
+                [],
+            ]
+
         if self.name == "YY":
             # Hard-coded decomposition is used for now. The compilation is inspired by the approach described in arXiv:1001.3855 [quant-ph]
             return [
@@ -1034,5 +1054,3 @@ class MCRY(MCTGate):
         self.ccx_decomposition.mcry(self.phase, self.qiskit_ctrl_q, self.qiskit_targ_q, self.qiskit_ancilla_q)
 
      
-
-
