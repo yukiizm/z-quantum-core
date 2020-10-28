@@ -580,7 +580,7 @@ class Gate(object):
                 [qiskit_qubits[1]],
                 [],
                 qiskit.extensions.standard.RZZGate(params[0]),
-                [qiskit_qubits[1]],
+                [qiskit_qubits[0], qiskit_qubits[1]],
                 [],
                 qiskit.extensions.standard.HGate(),
                 [qiskit_qubits[0]],
