@@ -13,6 +13,7 @@ from typing import Dict
 
 import mitiq
 from mitiq import execute_with_zne
+from zquantum.core.circuit import Circuit
 
 
 def run_circuit_and_measure(
