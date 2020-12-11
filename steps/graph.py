@@ -12,6 +12,8 @@ def generate_random_graph_erdos_renyi(
     number_of_nodes: int,
     edge_probability: float,
     random_weights: bool = False,
+    min_weight: int = 0,
+    max_weight: int = 1,
     seed: Union[str, int] = "None",
 ):
     if seed == "None":
@@ -26,6 +28,8 @@ def generate_random_regular_graph(
     number_of_nodes: int,
     degree: int,
     random_weights: bool = False,
+    min_weight: int = 0,
+    max_weight: int = 1,
     seed: Union[str, int] = "None",
 ):
     if seed == "None":
@@ -37,7 +41,11 @@ def generate_random_regular_graph(
 
 
 def generate_complete_graph(
-    number_of_nodes: int, random_weights: bool = False, seed: Union[str, int] = "None"
+    number_of_nodes: int, 
+    random_weights: bool = False, 
+    min_weight: int = 0,
+    max_weight: int = 1,
+    seed: Union[str, int] = "None"
 ):
     if seed == "None":
         seed = None

@@ -71,7 +71,7 @@ def generate_graph_node_dict(graph: nx.Graph) -> dict:
 
 
 def generate_random_graph_erdos_renyi(
-    num_nodes: int, probability: float, random_weights: bool = False, seed: Optional[int] = None
+    num_nodes: int, probability: float, random_weights: bool = False, min_weight:Optional[int]=0, max_weight:Optional[int]=1, seed: Optional[int] = None
 ) -> nx.Graph:
     """Randomly generate a graph from Erdos-Renyi ensemble. 
     A graph is constructed by connecting nodes randomly. 
@@ -91,7 +91,7 @@ def generate_random_graph_erdos_renyi(
         A networkx.Graph object
     """
     output_graph = nx.erdos_renyi_graph(n = num_nodes, p = probability, seed = seed)
-    output_graph = weight_graph_edges(output_graph, random_weights, seed)
+    output_graph = weight_graph_edges(output_graph, random_weights, min_weight, max_weight, seed)
      
     return output_graph
 
@@ -119,7 +119,7 @@ def generate_random_regular_graph(
     return output_graph
 
 def weight_graph_edges(
-    graph: nx.Graph, random_weights: bool = False, seed: Optional[int] = None
+    graph: nx.Graph, random_weights: bool = False, min_weight:Optional[int]=0, max_weight:Optional[int]=1, seed: Optional[int] = None
 ) -> nx.Graph:
     """Update the weights of all the edges of a graph. 
 
@@ -136,7 +136,7 @@ def weight_graph_edges(
     
     random.seed(seed)
     if random_weights:
-        weighted_edges = [(e[0], e[1], uniform(0, 1)) for e in graph.edges]
+        weighted_edges = [(e[0], e[1], uniform(min_weight, max_weight)) for e in graph.edges]
     else:
         weighted_edges = [(e[0], e[1], 1.0) for e in graph.edges]
     
