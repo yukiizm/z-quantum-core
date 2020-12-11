@@ -79,3 +79,17 @@ class AnsatzBasedCostFunction:
             delta=self.delta,
         )
         return ValueEstimate(np.sum(expectation_values.values))
+
+    def executor(self, pyquil_circuit):
+
+        circuit = Circuit(pyquil_circuit)
+        expectation_values = self.estimator.get_estimated_expectation_values(
+            self.backend,
+            circuit,
+            self.target_operator,
+            n_samples=self.n_samples,
+            epsilon=self.epsilon,
+            delta=self.delta,
+        )
+        return np.sum(expectation_values.values)
+
