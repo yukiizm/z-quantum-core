@@ -8,6 +8,7 @@ from .estimator import BasicEstimator
 from typing import Optional
 import numpy as np
 from openfermion import SymbolicOperator
+from zquantum.core.circuit import Circuit
 
 
 class AnsatzBasedCostFunction:
