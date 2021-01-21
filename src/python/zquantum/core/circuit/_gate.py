@@ -287,6 +287,8 @@ class Gate(object):
             return pyquil.gates.CPHASE(params[0], q1, q2)
         if self.name == "SWAP":
             return pyquil.gates.SWAP(q1, q2)
+        if self.name == "XY":
+            return pyquil.gates.XY(params[0], q1, q2)
 
     def to_cirq(self, input_cirq_qubits=None):
         """Convert to a cirq gate.

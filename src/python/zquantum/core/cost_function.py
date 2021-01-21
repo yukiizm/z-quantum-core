@@ -4,12 +4,12 @@ from .interfaces.estimator import Estimator
 from .interfaces.functions import function_with_gradient, StoreArtifact
 from .circuit import combine_ansatz_params, Circuit
 from .gradients import finite_differences_gradient
-from .estimator import BasicEstimator
+from .estimator import BasicEstimator, ExactEstimator
 from .utils import create_symbols_map, ValueEstimate
 from .measurement import ExpectationValues
-from typing import Optional, Callable
+from typing import Optional, Callable, List
 import numpy as np
-from openfermion import SymbolicOperator
+from openfermion import SymbolicOperator, IsingOperator
 
 
 def get_ground_state_cost_function(
@@ -137,6 +137,9 @@ class AnsatzBasedCostFunction:
         fixed_parameters (np.ndarray): values for the circuit parameters that should be fixed.
         parameter_precision (float): the standard deviation of the Gaussian noise to add to each parameter, if any.
         parameter_precision_seed (int): seed for randomly generating parameter deviation if using parameter_precision
+        eigenvalues (List[float]): The eigenvalues of the target operator, only useful when this operator is an Ising Hamiltonian
+        use_cvar (bool): If True, use CVaR as the objective function; otherwise, use expectation value instead
+        alpha (float): The alpha parameter in CVaR, must be between 0 and 1
 
     Params:
         target_operator (openfermion.SymbolicOperator): see Args
@@ -149,6 +152,10 @@ class AnsatzBasedCostFunction:
         fixed_parameters (np.ndarray): see Args
         parameter_precision (float): see Args
         parameter_precision_seed (int): see Args
+        eigenvalues: see Args
+        ranks (List[int]): The ranking of the computational basis states based on their energies, only useful when the target operator is an Ising Hamiltonian
+        use_cvar: see Args
+        alpha: see Args
     """
 
     def __init__(
@@ -163,6 +170,9 @@ class AnsatzBasedCostFunction:
         fixed_parameters: Optional[np.ndarray] = None,
         parameter_precision: Optional[float] = None,
         parameter_precision_seed: Optional[int] = None,
+        eigenvalues: Optional[List[float]] = None,
+        use_cvar: Optional[bool] = False,
+        alpha: Optional[float] = 1.0
     ):
         self.target_operator = target_operator
         self.ansatz = ansatz
@@ -177,6 +187,15 @@ class AnsatzBasedCostFunction:
         self.fixed_parameters = fixed_parameters
         self.parameter_precision = parameter_precision
         self.parameter_precision_seed = parameter_precision_seed
+
+        self.eigenvalues = eigenvalues
+        if self.eigenvalues is not None:
+            self.ranks = np.argsort(eigenvalues)
+        else:
+            self.ranks = None
+
+        self.use_cvar = use_cvar
+        self.alpha = alpha
 
     def __call__(self, parameters: np.ndarray) -> ValueEstimate:
         """Evaluates the value of the cost function for given parameters.
@@ -198,13 +217,26 @@ class AnsatzBasedCostFunction:
             full_parameters += noise_array
 
         circuit = self.ansatz.get_executable_circuit(full_parameters)
-        expectation_values = self.estimator.get_estimated_expectation_values(
-            self.backend,
-            circuit,
-            self.target_operator,
-            n_samples=self.n_samples,
-            epsilon=self.epsilon,
-            delta=self.delta,
-        )
 
+        if self.use_cvar: # Currently we only support CVaR for Ising Hamiltonians
+            assert isinstance(self.target_operator, IsingOperator)
+            assert isinstance(self.estimator, ExactEstimator)
+            cvar = self.estimator.get_exact_cvar(
+                self.backend,
+                circuit,
+                self.target_operator,
+                eigenvalues=self.eigenvalues,
+                ranks=self.ranks,
+                alpha=self.alpha
+                )  
+            return ValueEstimate(cvar)
+        else:
+            expectation_values = self.estimator.get_estimated_expectation_values(
+                self.backend,
+                circuit,
+                self.target_operator,
+                n_samples=self.n_samples,
+                epsilon=self.epsilon,
+                delta=self.delta,
+            )
         return sum_expectation_values(expectation_values)

@@ -267,3 +267,14 @@ class QuantumSimulator(QuantumBackend):
             # Get the expectation values
             measurements = self.run_circuit_and_measure(circuit, **kwargs)
             return measurements.get_distribution()
+
+    @abstractmethod
+    def get_exact_cvar(
+            self,
+            circuit: Circuit,
+            target_operator: SymbolicOperator,
+            eigenvalues: Optional[List[float]] = None,
+            ranks: Optional[List[int]] = None,
+            alpha: Optional[float] = 1.0
+        ) -> float:
+        raise NotImplementedError

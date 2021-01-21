@@ -195,3 +195,20 @@ class ExactEstimator(Estimator):
             raise AttributeError(
                 "To use the ExactEstimator, the backend must be a QuantumSimulator."
             )
+
+    def get_exact_cvar(
+        self,
+        backend: QuantumBackend,
+        circuit: Circuit,
+        target_operator: SymbolicOperator,
+        eigenvalues: Optional[List[float]] = None,
+        ranks: Optional[List[int]] = None,
+        alpha: Optional[float] = 1.0
+    ) -> float:
+        if isinstance(backend, QuantumSimulator):
+            return backend.get_exact_cvar(circuit, target_operator, eigenvalues=eigenvalues, ranks=ranks, alpha=alpha)
+        else:
+            raise AttributeError(
+                "To use the ExactEstimator, the backend must be a QuantumSimulator."
+            )
+            

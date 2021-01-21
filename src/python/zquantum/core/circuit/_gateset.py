@@ -32,6 +32,7 @@ COMMON_GATES = [
     "CZ",
     "CPHASE",
     "SWAP",
+    "XY"
 ]
 UNIQUE_GATES = [
     "ZXZ",
@@ -48,5 +49,7 @@ UNIQUE_GATES = [
     "MCU1",
     "MEASURE",
     "BARRIER",
+    "MPHASE",
+    "DICKE"
 ]  # gates unique to specific packages
 ALL_GATES = COMMON_GATES + UNIQUE_GATES

@@ -996,6 +996,12 @@ def add_gate_to_pyquil_program(pyquil_program, gate):
             return pyquil_program + MEASURE(gate.qubits[0].index, ro[0])
         if gate.name == "BARRIER":
             return pyquil_program
+        if gate.name == "MCU1":
+            ctrl = gate.control_qubits 
+            targ = gate.target_qubits[0] 
+            angle = gate.params[0] 
+            gate = RZ(angle, targ).controlled(ctrl)      
+            return pyquil_program + gate
 
 
 def add_ancilla_register_to_circuit(circuit, n_qubits_ancilla_register):
