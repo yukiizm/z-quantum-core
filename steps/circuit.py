@@ -19,14 +19,7 @@ from zquantum.core.testing import create_random_circuit as _create_random_circui
 from zquantum.core.utils import create_object
 import json
 from typing import Union, List, Optional, Dict
-
-Specs = Union[str, Dict]
-
-
-def load_from_specs(specs):
-    if isinstance(specs, str):
-        specs = json.loads(specs)
-    return create_object(specs)
+from .utils import Specs, load_from_specs
 
 
 # Generate random parameters for an ansatz
