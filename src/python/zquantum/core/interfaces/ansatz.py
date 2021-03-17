@@ -59,7 +59,7 @@ class Ansatz(ABC, EnforceOverrides):
         """Returns number of parameters in the ansatz."""
 
         if self.supports_parametrized_circuits:
-            return len(self.parametrized_circuit.symbolic_params)
+            return len(self.parametrized_circuit.free_symbols)
         else:
             raise NotImplementedError
 
@@ -71,7 +71,7 @@ class Ansatz(ABC, EnforceOverrides):
         if params is None:
             raise (Exception("Parameters can't be None for executable circuit."))
         if self.supports_parametrized_circuits:
-            symbols = self.parametrized_circuit.symbolic_params
+            symbols = self.parametrized_circuit.free_symbols
             symbols_map = create_symbols_map(symbols, params)
             executable_circuit = self.parametrized_circuit.evaluate(symbols_map)
             return executable_circuit
@@ -90,6 +90,6 @@ class Ansatz(ABC, EnforceOverrides):
         """Returns a list of symbolic parameters used for creating the ansatz."""
         warnings.warn(
             """`Ansatz.get_symbols()` will be deprecated in future releases of z-quantumcore.\
-                Please use `self.parametrized_circuit.symbolic_params` instead.""",
+                Please use `self.parametrized_circuit.free_symbols` instead.""",
         )
-        return self.parametrized_circuit.symbolic_params
+        return self.parametrized_circuit.free_symbols

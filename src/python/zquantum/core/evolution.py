@@ -2,7 +2,7 @@ import openfermion, pyquil
 from pyquil.paulis import exponentiate as pyquil_exponentiate
 from .openfermion import qubitop_to_pyquilpauli
 import numpy as np
-from .circuit import Circuit
+from .wip.circuits import Circuit, import_from_pyquil, RZ, PHASE
 from typing import Tuple, List, Union
 import sympy
 
@@ -166,19 +166,29 @@ def time_evolution_for_term(
         Circuit: Circuit representing evolved pyquil term.
     """
     if isinstance(time, sympy.Expr):
-        circuit = Circuit(pyquil_exponentiate(term))
-        for gate in circuit.gates:
-            if len(gate.params) == 0:
-                pass
-            elif len(gate.params) > 1:
+        circuit = import_from_pyquil(pyquil_exponentiate(term))
+        new_circuit = Circuit()
+        for operation in circuit.operations:
+            if len(operation.gate.params) == 0:
+                new_circuit += operation
+            elif len(operation.gate.params) > 1:
                 raise (
                     NotImplementedError(
                         "Time evolution of multi-parametered gates with symbolic parameters is not supported."
                     )
                 )
-            elif gate.name == "Rz" or gate.name == "PHASE":
+            elif operation.gate.name == "RZ":
                 # We only want to modify the parameter of Rz gate or PHASE gate.
-                gate.params[0] = gate.params[0] * time
+                # gate.params[0] = gate.params[0] * time
+                new_circuit += RZ(operation.gate.params[0] * time)(
+                    operation.qubit_indices[0]
+                )
+            elif operation.gate.name == "PHASE":
+                new_circuit += PHASE(operation.gate.params[0] * time)(
+                    operation.qubit_indices[0]
+                )
+
     else:
-        circuit = Circuit(pyquil_exponentiate(term * time))
-    return circuit
+        # circuit = Circuit(pyquil_exponentiate(term * time))
+        new_circuit = import_from_pyquil(pyquil_exponentiate(term * time))
+    return new_circuit

@@ -5,7 +5,7 @@ import math
 import random
 import numpy as np
 from openfermion.ops import QubitOperator, IsingOperator
-from ..circuit import Circuit
+from ..wip.circuits import Circuit, import_from_pyquil
 from ..utils import RNDSEED
 
 
@@ -27,7 +27,7 @@ def create_random_circuit(nqubits, ngates, seed=None):
         None, a Circuit (core.circuit) object is saved under 'circuit.json'
     """
     # Initialize all gates in set, not including RH or ZXZ
-    SING_ZERO = [X, Y, Z, H, S, T]
+    SING_ZERO = [X, Y, Z, H, T]
     SING_ONE = [RX, RY, RZ, PHASE]
     TWO_ZERO = [CNOT, CZ, SWAP]
     TWO_ONE = [CPHASE]
@@ -72,8 +72,7 @@ def create_random_circuit(nqubits, ngates, seed=None):
             param = random.uniform(-math.pi, math.pi)
             p += gate(param, qubit, target)
 
-    c = Circuit(p)
-    return c
+    return import_from_pyquil(p)
 
 
 def create_random_qubitop(nqubits, nterms, seed=None):

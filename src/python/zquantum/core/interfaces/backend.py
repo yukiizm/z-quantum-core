@@ -12,7 +12,8 @@ from ..bitstring_distribution import (
     BitstringDistribution,
     create_bitstring_distribution_from_probability_distribution,
 )
-from ..circuit import Circuit, CircuitConnectivity
+from ..circuit import CircuitConnectivity
+from ..wip.circuits import Circuit
 from ..measurement import ExpectationValues, Measurements, expectation_values_to_real
 from ..openfermion import get_expectation_value, change_operator_type
 

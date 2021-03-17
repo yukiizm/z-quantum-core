@@ -119,6 +119,12 @@ class Circuit:
             f"custom_gate_definitions={self.custom_gate_definitions})"
         )
 
+    def to_unitary(self):
+        from .conversions.cirq_conversions import export_to_cirq
+        import cirq
+
+        return cirq.unitary(export_to_cirq(self))
+
 
 @singledispatch
 def _append_to_circuit(other, circuit: Circuit):

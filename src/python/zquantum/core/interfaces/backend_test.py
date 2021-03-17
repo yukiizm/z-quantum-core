@@ -1,12 +1,13 @@
 import numpy as np
 import pytest
 import functools
-from pyquil import Program
-from pyquil.gates import X, CNOT, H
+
+# from pyquil import Program
+# from pyquil.gates import X, CNOT, H
 from pyquil.wavefunction import Wavefunction
 from openfermion import QubitOperator, IsingOperator
 
-from ..circuit import Circuit, Qubit, Gate
+from ..wip.circuits import Circuit, Gate, X, H, CNOT
 from ..measurement import Measurements, ExpectationValues
 from ..bitstring_distribution import BitstringDistribution
 from ..estimator import BasicEstimator
@@ -59,7 +60,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # circuit = circuit.Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
         n_samples = 100
         # When
         backend.n_samples = n_samples
@@ -79,7 +81,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
 
         # When
         backend.n_samples = n_shots
@@ -98,7 +101,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
 
         # When
         measurements = backend.run_circuit_and_measure(circuit, n_shots)
@@ -113,7 +117,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
 
         # When
         backend.n_samples = 100
@@ -129,7 +134,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
         n_samples = 100
         number_of_circuits = 25
         # When
@@ -157,8 +163,10 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        first_circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
-        second_circuit = Circuit(Program(X(0), X(1), X(2)))
+        # first_circuit = Circuit(Program(X(0), X(0), X(1), X(1), X(2)))
+        # second_circuit = Circuit(Program(X(0), X(1), X(2)))
+        first_circuit = Circuit([X(0), X(0), X(1), X(1), X(2)])
+        second_circuit = Circuit([X(0), X(1), X(2)])
         n_samples = [100, 105]
 
         # When
@@ -183,7 +191,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
         operator = IsingOperator("[]")
         target_expectation_values = np.array([1])
         n_samples = 1
@@ -203,7 +212,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
         operator = IsingOperator()
         # When
         backend.n_samples = 1
@@ -219,7 +229,9 @@ class QuantumBackendTests:
         backend.number_of_jobs_run = 0
         num_circuits = 10
         circuitset = [
-            Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2))) for _ in range(num_circuits)
+            # Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2))) for _ in range(num_circuits)
+            Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
+            for _ in range(num_circuits)
         ]
         operator = IsingOperator("[]")
         target_expectation_values = np.array([1])
@@ -251,7 +263,8 @@ class QuantumBackendTests:
         # Given
         backend.number_of_circuits_run = 0
         backend.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
         n_samples = 1000
 
         backend.n_samples = n_samples
@@ -452,7 +465,8 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Given
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
 
         # When
         wavefunction = wf_simulator.get_wavefunction(circuit)
@@ -469,7 +483,8 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Given
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
         qubit_operator = QubitOperator("2[] - [Z0 Z1] + [X0 X2]")
         target_expectation_values = np.array([2.0, -1.0, 0.0])
 
@@ -489,7 +504,8 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Given
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
         qubit_operator = QubitOperator()
         target_value = 0.0
         # When
@@ -505,7 +521,8 @@ class QuantumSimulatorTests(QuantumBackendTests):
         # Given
         wf_simulator.number_of_circuits_run = 0
         wf_simulator.number_of_jobs_run = 0
-        circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        # circuit = Circuit(Program(H(0), CNOT(0, 1), CNOT(1, 2)))
+        circuit = Circuit([H(0), CNOT(0, 1), CNOT(1, 2)])
 
         # When
         bitstring_distribution = wf_simulator.get_bitstring_distribution(circuit)

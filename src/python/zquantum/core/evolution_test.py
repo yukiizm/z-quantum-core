@@ -9,6 +9,7 @@ from .evolution import (
     generate_circuit_sequence,
     time_evolution_for_term,
 )
+from .wip.circuits import export_to_cirq
 from .utils import compare_unitary
 from .testing import create_random_circuit
 from pyquil.paulis import PauliSum, PauliTerm
@@ -48,7 +49,7 @@ class TestTimeEvolution(unittest.TestCase):
 
         # When
         unitary_evolution = time_evolution(hamiltonian, time, trotter_order=order)
-        final_unitary = unitary_evolution.to_unitary()
+        final_unitary = cirq.unitary(export_to_cirq(unitary_evolution))
 
         # Then
         self.assertEqual(
@@ -91,7 +92,7 @@ class TestTimeEvolution(unittest.TestCase):
         unitary_evolution_symbolic = time_evolution(
             hamiltonian, time_symbol, trotter_order=order
         )
-        unitary_evolution = unitary_evolution_symbolic.evaluate(symbols_map)
+        unitary_evolution = unitary_evolution_symbolic.bind(symbols_map)
         final_unitary = unitary_evolution.to_unitary()
         # Then
         self.assertEqual(
@@ -171,24 +172,24 @@ class TestTimeEvolution(unittest.TestCase):
 
         # Then
         self.assertEqual(
-            len(sequence_1.gates),
+            len(sequence_1.operations),
             different_circuit_len + repeated_circuit_len * (length - 1),
         )
         different_circuit_start_1 = repeated_circuit_len * position_1
         different_circuit_start_2 = repeated_circuit_len * position_2
         self.assertListEqual(
-            sequence_1.gates[
+            sequence_1.operations[
                 different_circuit_start_1 : different_circuit_start_1
                 + different_circuit_len
             ],
-            different_circuit.gates,
+            different_circuit.operations,
         )
         self.assertListEqual(
-            sequence_2.gates[
+            sequence_2.operations[
                 different_circuit_start_2 : different_circuit_start_2
                 + different_circuit_len
             ],
-            different_circuit.gates,
+            different_circuit.operations,
         )
 
         # Given
@@ -250,18 +251,10 @@ class TestTimeEvolution(unittest.TestCase):
         target_unitary_4 = -np.eye(2)
 
         # When
-        unitary_1 = (
-            time_evolution_for_term(term_1, time).evaluate(symbols_map).to_unitary()
-        )
-        unitary_2 = (
-            time_evolution_for_term(term_2, time).evaluate(symbols_map).to_unitary()
-        )
-        unitary_3 = (
-            time_evolution_for_term(term_3, time).evaluate(symbols_map).to_unitary()
-        )
-        unitary_4 = (
-            time_evolution_for_term(term_4, time).evaluate(symbols_map).to_unitary()
-        )
+        unitary_1 = time_evolution_for_term(term_1, time).bind(symbols_map).to_unitary()
+        unitary_2 = time_evolution_for_term(term_2, time).bind(symbols_map).to_unitary()
+        unitary_3 = time_evolution_for_term(term_3, time).bind(symbols_map).to_unitary()
+        unitary_4 = time_evolution_for_term(term_4, time).bind(symbols_map).to_unitary()
 
         # Then
         np.testing.assert_array_almost_equal(unitary_1, target_unitary_1)
