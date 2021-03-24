@@ -9,7 +9,7 @@ setuptools.setup(
     description="A core library of the scientific code for Orquestra.",
     url="https://github.com/zapatacomputing/z-quantum-core",
     packages=setuptools.find_namespace_packages(
-        include=["zquantum.*"], where="src/python"
+        include=["zquantum.*"], where="src/"
     ),
     package_dir={"": "src/python"},
     classifiers=(
