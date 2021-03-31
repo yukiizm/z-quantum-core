@@ -38,7 +38,7 @@ def time_evolution(
                 )
 
     else:
-        raise ValueError("Currently the method {} is not supported".format(method))
+        raise ValueError(f"Currently the method {method} is not supported")
 
     return output
 
@@ -124,7 +124,7 @@ def time_evolution_derivatives(
 
     else:
 
-        raise ValueError("Currently the method {} is not supported".format(method))
+        raise ValueError(f"Currently the method {method} is not supported")
 
 
 def generate_circuit_sequence(

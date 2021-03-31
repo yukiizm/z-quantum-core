@@ -97,5 +97,5 @@ def save_optimization_results(optimization_results: dict, filename: AnyPath):
 
 
 def load_optimization_results(filename: AnyPath):
-    with open(filename, "rt") as source_file:
+    with open(filename) as source_file:
         return json.load(source_file, cls=OrquestraDecoder)

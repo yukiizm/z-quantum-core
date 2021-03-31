@@ -42,7 +42,9 @@ class Optimizer(ABC):
         raise NotImplementedError
 
 
-def optimization_result(*, opt_value, opt_params, **kwargs) -> scipy.optimize.OptimizeResult:
+def optimization_result(
+    *, opt_value, opt_params, **kwargs
+) -> scipy.optimize.OptimizeResult:
     """Construct instance of OptimizeResult.
 
     The purpose of this function is to add a safety layer by detecting if required
@@ -57,7 +59,5 @@ def optimization_result(*, opt_value, opt_params, **kwargs) -> scipy.optimize.Op
         other passed arguments.
     """
     return scipy.optimize.OptimizeResult(
-        opt_value=opt_value,
-        opt_params=opt_params,
-        **kwargs
+        opt_value=opt_value, opt_params=opt_params, **kwargs
     )

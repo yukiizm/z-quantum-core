@@ -17,7 +17,7 @@ from ._gateset import COMMON_GATES, UNIQUE_GATES
 from ._qubit import Qubit
 
 
-class Circuit(object):
+class Circuit:
     """Base class for quantum circuits.
 
     Attributes:
@@ -31,7 +31,7 @@ class Circuit(object):
             core.qubit.Qubit objects.
         info: dictionary
             Additional information related to the circuit. For example if the circuit is converted
-            from another package, infomation related to the native specification of the circuit in
+            from another package, information related to the native specification of the circuit in
             that package is recorded here.
     """
 
@@ -69,7 +69,7 @@ class Circuit(object):
         else:
             raise (
                 TypeError(
-                    "Incorrect type of input object: {0}".format(type(input_object))
+                    "Incorrect type of input object: {}".format(type(input_object))
                 )
             )
 
@@ -154,13 +154,13 @@ class Circuit(object):
         new_circuit.info = self.info
         gates = []
 
-        all_symbols_in_map = set([item[0] for item in symbols_map])
+        all_symbols_in_map = {item[0] for item in symbols_map}
         if len(all_symbols_in_map - set(self.symbolic_params)) > 0:
             warnings.warn(
                 """
                 Trying to evaluate circuit with symbols not existing in the circuit:
-                Symbols in circuit: {0}
-                Symbols in the map: {1}
+                Symbols in circuit: {}
+                Symbols in the map: {}
                 """.format(
                     self.symbolic_params, all_symbols_in_map
                 ),
@@ -330,7 +330,7 @@ class Circuit(object):
         qpic_string = ""
 
         for qubit in sorted(self.qubits, key=lambda q: q.index):
-            qpic_string += "w{} W {}\n".format(qubit.index, qubit.index)
+            qpic_string += f"w{qubit.index} W {qubit.index}\n"
 
         for gate in self.gates:
             qpic_string += gate.to_qpic() + "\n"
@@ -587,7 +587,7 @@ def load_circuit(file):
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -621,7 +621,7 @@ def load_circuit_set(file):
         circuit_set (list): a list of core.Circuit objects
     """
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -673,7 +673,7 @@ def pyquil2cirq(qprog):
 
     for gate in qprog:
         if not op_map.get(gate.name):
-            raise ValueError("Gate {} not yet supported".format(gate.name))
+            raise ValueError(f"Gate {gate.name} not yet supported")
 
         # Find the cirq qubits that this gate acts on
         target_qubits = [qubits[qubit_map[q.index]] for q in gate.qubits]
@@ -687,7 +687,7 @@ def pyquil2cirq(qprog):
             )
         else:
             raise ValueError(
-                "Gates with more than one parameter not yet supported: {}".format(gate)
+                f"Gates with more than one parameter not yet supported: {gate}"
             )
 
         # Append the gate to the circuit
@@ -812,7 +812,7 @@ def cirq2pyquil(circuit):
                 add_to_program(op)
 
         else:
-            raise ValueError("Gate {} not yet supported".format(op.gate))
+            raise ValueError(f"Gate {op.gate} not yet supported")
 
     for moment in circuit:
         for op in moment.operations:

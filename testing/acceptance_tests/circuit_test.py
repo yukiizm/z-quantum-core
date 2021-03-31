@@ -770,7 +770,7 @@ class TestBatchCircuits:
     def input_circuits_filenames(self, input_circuits):
         circuit_filenames = []
         for i, circuit in enumerate(input_circuits):
-            circuit_filenames.append("circuit-{}.json".format(i))
+            circuit_filenames.append(f"circuit-{i}.json")
             save_circuit(circuit, circuit_filenames[i])
 
         yield circuit_filenames

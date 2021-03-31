@@ -43,7 +43,7 @@ class Ansatz(ABC, EnforceOverrides):
             else:
                 raise (
                     NotImplementedError(
-                        "{0} does not support parametrized circuits.".format(
+                        "{} does not support parametrized circuits.".format(
                             type(self).__name__
                         )
                     )

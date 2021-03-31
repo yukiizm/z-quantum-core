@@ -18,7 +18,7 @@ from ._gateset import ALL_GATES
 from ._qubit import Qubit
 
 
-class Gate(object):
+class Gate:
     """Class for storing information associated with a quantum gate.
 
     Attributes:
@@ -205,9 +205,7 @@ class Gate(object):
         }:  # gates defined in cirq
             return self.to_cirq().gate._unitary_()
         else:
-            raise NotImplementedError(
-                "Gate {} currently not supported.".format(self.name)
-            )
+            raise NotImplementedError(f"Gate {self.name} currently not supported.")
 
     @classmethod
     def from_dict(cls, dict):
@@ -308,7 +306,7 @@ class Gate(object):
         """
 
         if self.name not in ALL_GATES:
-            sys.exit("Gate {} currently not supported.".format(self.name))
+            sys.exit(f"Gate {self.name} currently not supported.")
 
         q_inds = []
         q_inds.append(self.qubits[0].index)
@@ -407,7 +405,7 @@ class Gate(object):
 
         Args:
             qreg: QuantumRegister
-                Optional feature in case the original circuit is not contructed from qiskit.
+                Optional feature in case the original circuit is not constructed from qiskit.
                 Then we will use a single QuantumRegister for all of the qubits for the qiskit
                 QuantumCircuit object.
         Returns:
@@ -662,11 +660,11 @@ class Gate(object):
             # Which qubits the gate acts on
             qpic_string = ""
             for qubit in self.qubits:
-                qpic_string += "w{} ".format(qubit.index)
+                qpic_string += f"w{qubit.index} "
 
             # The gate label. Note the extra curly braces so that whitespaces are
             # included in the gate label
-            qpic_string += "G {{{}{}}} ".format(self.name, self.get_param_string())
+            qpic_string += f"G {{{self.name}{self.get_param_string()}}} "
 
             # Try to adjust the width so that the label fits
             if len(self.params) > 0:
@@ -827,7 +825,7 @@ class Gate(object):
                         )
             else:
                 raise NotImplementedError(
-                    "The cirq gate {} is currently not supported".format(name_str)
+                    f"The cirq gate {name_str} is currently not supported"
                 )
 
         output.qubits = Qubit_list
@@ -878,7 +876,7 @@ class Gate(object):
             output.name == "CU3"
         else:
             raise NotImplementedError(
-                "The gate {} is currently not supported.".format(qiskit_gate.name)
+                f"The gate {qiskit_gate.name} is currently not supported."
             )
 
         output.qubits = Qubit_list
@@ -921,7 +919,7 @@ class DampingBeta(cirq.ops.gate_features.SingleQubitGate):
         return f"Db({self.p})"
 
 
-class MCTGate(object):
+class MCTGate:
     """
     An Orquestra gate class that deals with synthesis of a Multi Toffoli Gate
     Although this inherits the Gate class it has extra attributes fundamentally related to
@@ -932,17 +930,17 @@ class MCTGate(object):
                                  assigned as control and target qubits. We thus get all qubits in the circuit in order
                                  to use them as possible ancilla qubits.
 
-    control_qubits (list): This list contains integer labels for the qubits thats will act as the
+    control_qubits (list): This list contains integer labels for the qubits that's will act as the
     control qubits. e.g [1, 2, 3, 4]
     target_qubits (list): This is a list that contains integer labels for the qubits that are target qubits
 
     all_qubits (list): A list of zmachine.core.qubit.Qubit This is necessary to determine what qubits
     are the ancilla
 
-    ancilla_qubits (list): A list that contians integer labels for all the qubits labels that are the ancilla. These are needed since the MCT synthesis
+    ancilla_qubits (list): A list that contains integer labels for all the qubits labels that are the ancilla. These are needed since the MCT synthesis
     requires in general addition of ancilla qubits
 
-    ccx_list (list): A list that contains CCX orquestra gates that represent the decompostion of the MCT gate
+    ccx_list (list): A list that contains CCX orquestra gates that represent the decomposition of the MCT gate
 
     ccx_decomposition (qiskit circuit): Contains the Toffoli Decomposition which is the output from the mct gate
 
@@ -1039,7 +1037,7 @@ class MCRY(MCTGate):
     """
     This applies the MulltiControl Y rotation
     Attributes:
-    phase(numpy float): The phase angle for oracle to be implemente
+    phase(numpy float): The phase angle for oracle to be implemented
     """
 
     def __init__(

@@ -52,7 +52,7 @@ def optimize_parametrized_circuit_for_ground_state_of_operator(
     optimizer = create_object(optimizer_specs)
 
     if isinstance(target_operator, str):
-        with open(target_operator, "r") as f:
+        with open(target_operator) as f:
             target_operator = json.loads(f.read())
 
     if isinstance(parametrized_circuit, str):

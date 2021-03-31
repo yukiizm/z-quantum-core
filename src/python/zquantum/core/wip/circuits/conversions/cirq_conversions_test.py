@@ -50,18 +50,14 @@ EQUIVALENT_PARAMETRIC_GATES = [
     ],
 )
 class TestGateConversion:
-    def test_matrices_of_corresponding_zquantum_and_cirq_gates_are_equal(
-        self, zquantum_gate, cirq_gate
-    ):
+    def test_matrices_of_corresponding_zquantum_and_cirq_gates_are_equal(self, zquantum_gate, cirq_gate):
         zquantum_matrix = np.array(zquantum_gate.matrix).astype(np.complex128)
         np.testing.assert_allclose(zquantum_matrix, cirq.unitary(cirq_gate), atol=1e-8)
 
     def test_exporting_gate_to_cirq_gives_expected_gate(self, zquantum_gate, cirq_gate):
         assert export_to_cirq(zquantum_gate) == cirq_gate
 
-    def test_importing_gate_from_cirq_gives_expected_gate(
-        self, zquantum_gate, cirq_gate
-    ):
+    def test_importing_gate_from_cirq_gives_expected_gate(self, zquantum_gate, cirq_gate):
         assert import_from_cirq(cirq_gate) == zquantum_gate
 
 
@@ -119,18 +115,18 @@ class CustomGate(cirq.Gate):
 
     Taken from: https://quantumai.google/cirq/custom_gates
     """
+
     def __init__(self, theta):
-        super(CustomGate, self)
+        super()
         self.theta = theta
 
     def _num_qubits_(self):
         return 1
 
     def _unitary_(self):
-        return np.array([
-            [np.cos(self.theta), np.sin(self.theta)],
-            [np.sin(self.theta), -np.cos(self.theta)]
-        ]) / np.sqrt(2)
+        return np.array(
+            [[np.cos(self.theta), np.sin(self.theta)], [np.sin(self.theta), -np.cos(self.theta)]]
+        ) / np.sqrt(2)
 
     def _circuit_diagram_info_(self, args):
         return f"R({self.theta})"
@@ -139,69 +135,49 @@ class CustomGate(cirq.Gate):
 UNSUPPORTED_CIRQ_CIRCUITS = [
     cirq.Circuit([cirq.ZPowGate(exponent=1.2, global_shift=0.1)(lq(1))]),
     cirq.Circuit([cirq.CCXPowGate(exponent=-0.1, global_shift=THETA)(*lq.range(3))]),
-    cirq.Circuit([CustomGate(GAMMA)(lq(1))])
+    cirq.Circuit([CustomGate(GAMMA)(lq(1))]),
 ]
 
 
 class TestExportingToQiskit:
     @pytest.mark.parametrize("zquantum_circuit,cirq_circuit", EQUIVALENT_CIRCUITS)
-    def test_exporting_circuit_gives_equivalent_circuit(
-        self, zquantum_circuit, cirq_circuit
-    ):
+    def test_exporting_circuit_gives_equivalent_circuit(self, zquantum_circuit, cirq_circuit):
         converted = export_to_cirq(zquantum_circuit)
-        assert converted == cirq_circuit, (
-            f"Converted circuit:\n{converted}\n isn't equal to\n{cirq_circuit}"
-        )
+        assert converted == cirq_circuit, f"Converted circuit:\n{converted}\n isn't equal to\n{cirq_circuit}"
 
-    @pytest.mark.parametrize(
-        "zquantum_circuit, cirq_circuit", EQUIVALENT_PARAMETRIZED_CIRCUITS
-    )
+    @pytest.mark.parametrize("zquantum_circuit, cirq_circuit", EQUIVALENT_PARAMETRIZED_CIRCUITS)
     def test_exporting_and_binding_parametrized_circuit_results_in_equivalent_circuit(
         self, zquantum_circuit, cirq_circuit
     ):
         converted = export_to_cirq(zquantum_circuit)
         converted_bound = cirq.resolve_parameters(converted, EXAMPLE_PARAM_VALUES)
         ref_bound = cirq.resolve_parameters(cirq_circuit, EXAMPLE_PARAM_VALUES)
-        assert converted_bound == ref_bound, (
-            f"Converted circuit:\n{converted_bound}\n isn't equal to\n{ref_bound}"
-        )
+        assert converted_bound == ref_bound, f"Converted circuit:\n{converted_bound}\n isn't equal to\n{ref_bound}"
 
-    @pytest.mark.parametrize(
-        "zquantum_circuit, cirq_circuit", EQUIVALENT_PARAMETRIZED_CIRCUITS
-    )
+    @pytest.mark.parametrize("zquantum_circuit, cirq_circuit", EQUIVALENT_PARAMETRIZED_CIRCUITS)
     def test_binding_and_exporting_parametrized_circuit_results_in_equivalent_circuit(
         self, zquantum_circuit, cirq_circuit
     ):
         bound = zquantum_circuit.bind(EXAMPLE_PARAM_VALUES)
         bound_converted = export_to_cirq(bound)
-        ref_bound = cirq.resolve_parameters(
-            cirq_circuit, {**EXAMPLE_PARAM_VALUES, sympy.pi: 3.14}
-        )
-        assert cirq.approx_eq(bound_converted, ref_bound), (
-            f"Converted circuit:\n{bound_converted}\n isn't equal to\n{ref_bound}"
-        )
+        ref_bound = cirq.resolve_parameters(cirq_circuit, {**EXAMPLE_PARAM_VALUES, sympy.pi: 3.14})
+        assert cirq.approx_eq(
+            bound_converted, ref_bound
+        ), f"Converted circuit:\n{bound_converted}\n isn't equal to\n{ref_bound}"
 
     def test_daggers_are_converted_to_inverses(self):
         # NOTE: We don't add this test case to EQUIVALENT_CIRCUITS, because
         # only Zquantum -> cirq conversion is supported.
-        zquantum_circuit = _circuit.Circuit(
-            [_builtin_gates.X.dagger(2), _builtin_gates.T.dagger(1)]
-        )
-        cirq_circuit = cirq.Circuit(
-            [cirq.inverse(cirq.X)(lq(2)), cirq.inverse(cirq.T)(lq(1))]
-        )
+        zquantum_circuit = _circuit.Circuit([_builtin_gates.X.dagger(2), _builtin_gates.T.dagger(1)])
+        cirq_circuit = cirq.Circuit([cirq.inverse(cirq.X)(lq(2)), cirq.inverse(cirq.T)(lq(1))])
         converted = export_to_cirq(zquantum_circuit)
 
-        assert converted == cirq_circuit, (
-            f"Converted circuit:\n{converted}\n isn't equal " f"to\n{cirq_circuit}"
-        )
+        assert converted == cirq_circuit, f"Converted circuit:\n{converted}\n isn't equal " f"to\n{cirq_circuit}"
 
 
 class TestImportingFromCirq:
     @pytest.mark.parametrize("zquantum_circuit, cirq_circuit", EQUIVALENT_CIRCUITS)
-    def test_importing_circuit_gives_equivalent_circuit(
-        self, zquantum_circuit, cirq_circuit
-    ):
+    def test_importing_circuit_gives_equivalent_circuit(self, zquantum_circuit, cirq_circuit):
         imported = import_from_cirq(cirq_circuit)
         assert imported == zquantum_circuit
 

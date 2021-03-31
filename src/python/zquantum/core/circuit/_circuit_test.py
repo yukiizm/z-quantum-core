@@ -379,14 +379,14 @@ class TestCircuit(unittest.TestCase):
         u2 = Circuit(circ2).to_unitary()
         u3 = cirq_gate._unitary_()
         if compare_unitary(u1, u2, tol=1e-10) == False:
-            print("u1={}".format(u1))
-            print("u2={}".format(u2))
+            print(f"u1={u1}")
+            print(f"u2={u2}")
         if compare_unitary(u2, u3, tol=1e-10) == False:
-            print("u2={}".format(u2))
-            print("u3={}".format(u3))
+            print(f"u2={u2}")
+            print(f"u3={u3}")
         if compare_unitary(u3, u, tol=1e-10) == False:
-            print("u2={}".format(u2))
-            print("u3={}".format(u3))
+            print(f"u2={u2}")
+            print(f"u3={u3}")
         self.assertTrue(compare_unitary(u1, u2, tol=1e-10))
         self.assertTrue(compare_unitary(u2, u3, tol=1e-10))
         self.assertTrue(compare_unitary(u3, u, tol=1e-10))
@@ -1416,7 +1416,7 @@ class TestCircuit(unittest.TestCase):
 
     def test_ccx_to_qiskit_conversion(self):
         """
-        This function makes sure that the CCX integration into Orquestra is seemless
+        This function makes sure that the CCX integration into Orquestra is seamless
         Starts with an Orquestra circuit converts to qiskit circuit which should contain
         the Toffoli Gate and back to an Orquestra circuit and tests equality
         """
@@ -1440,7 +1440,7 @@ class TestCircuit(unittest.TestCase):
 
     def test_ccx_from_qiskit_conversion(self):
         """
-        This function makes sure that the CCX integration into Orquestra is seemless
+        This function makes sure that the CCX integration into Orquestra is seamless
         Starts with an Orquestra circuit converts to qiskit circuit which should contain
         the Toffoli Gate and back to an Orquestra circuit and tests equality
         """
@@ -1567,9 +1567,7 @@ class TestCircuit(unittest.TestCase):
         self.assertEqual(qiskit_gates == translated_ibm_circuit_1, True)
 
     def test_control_rotation_gates(self):
-        """Test addition of crx, cry and crz from qiskit
-
-        """
+        """Test addition of crx, cry and crz from qiskit"""
         qr = QuantumRegister(2, name="q")
         cr = ClassicalRegister(2, name="c")
         qc = QuantumCircuit(qr, cr)
@@ -1630,9 +1628,7 @@ class TestCircuit(unittest.TestCase):
         self.assertEqual(extended_circuit == expected_circuit, True)
 
     def test_cu1_gate(self):
-        """Test that qiskit CU1 gate is properly converted.
-
-        """
+        """Test that qiskit CU1 gate is properly converted."""
         qr = QuantumRegister(2, name="q")
         cr = ClassicalRegister(2, name="c")
         qiskit_circuit = QuantumCircuit(qr, cr)

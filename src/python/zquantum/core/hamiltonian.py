@@ -248,7 +248,7 @@ def estimate_nmeas_for_frames(
     frame_operators: List[QubitOperator],
     expecval: Optional[ExpectationValues] = None,
 ) -> Tuple[float, int, np.array]:
-    """Calculates the number of measurements required for computing
+    r"""Calculates the number of measurements required for computing
     the expectation value of a qubit hamiltonian, where co-measurable terms
     are grouped in a single QubitOperator, and different groups are different
     members of the list.

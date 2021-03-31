@@ -57,7 +57,7 @@ class TestCircuitTemplate(unittest.TestCase):
 
     def test_circuit_template_params_io(self):
         # Given
-        params = np.random.rand((10))
+        params = np.random.rand(10)
         filename = "circuit_template_params.json"
 
         # When

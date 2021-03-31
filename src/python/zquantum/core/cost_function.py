@@ -87,7 +87,7 @@ def get_ground_state_cost_function(
 
 
 def sum_expectation_values(expectation_values: ExpectationValues) -> ValueEstimate:
-    """Compute the sum of expectation values.
+    r"""Compute the sum of expectation values.
 
     If correlations are available, the precision of the sum is computed as
 

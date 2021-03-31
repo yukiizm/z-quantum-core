@@ -21,12 +21,14 @@ class ArtifactCollection(dict):
 
     The `forced` flag is set whenever an artifact is forced into the dictionary
     despite current save_condition being false.
-     """
+    """
+
     forced: bool = False
 
 
 class HistoryEntryWithArtifacts(NamedTuple):
     """A history entry enhanced with artifacts."""
+
     call_number: int
     params: Any
     value: Any
@@ -35,6 +37,7 @@ class HistoryEntryWithArtifacts(NamedTuple):
 
 class HistoryEntry(NamedTuple):
     """A basic history entry storing call number, parameters and target function value."""
+
     call_number: int
     params: Any
     value: Any
@@ -48,7 +51,8 @@ class SimpleRecorder(Generic[S, T]):
           function.
         save_condition: a function determining whether given call should be saved
           to the history. See respective protocol for explanation of this parameter.
-     """
+    """
+
     def __init__(self, target: Callable[[S], T], save_condition: SaveCondition):
         self.predicate = save_condition
         self.target = target
@@ -76,6 +80,7 @@ class SimpleRecorderWithGradient(SimpleRecorder):
 
     Except having `gradient` attribute, this recorder is the same as `SimpleRecorder`.
     """
+
     def __init__(self, target: CallableWithGradient, save_condition: SaveCondition):
         super().__init__(target, save_condition)
         self.gradient = target.gradient
@@ -87,6 +92,7 @@ class ArtifactRecorder(Generic[S, T]):
     Parameters to initializer are the same as for `SimpleRecorder`,
     except the target function should now be capable of storing artifacts.
     """
+
     def __init__(
         self, target: CallableStoringArtifacts[S, T], save_condition: SaveCondition
     ):
@@ -111,6 +117,7 @@ class ArtifactRecorder(Generic[S, T]):
 
 class ArtifactRecorderWithGradient(ArtifactRecorder):
     """A recorder storing history entries with artifacts supporting callables with gradient."""
+
     def __init__(
         self,
         target: CallableWithGradientStoringArtifacts,
@@ -132,10 +139,12 @@ def store_artifact(artifacts) -> StoreArtifact:
         This function is intended to be passed to functions that are capable of
         storing artifacts.
     """
+
     def _store(artifact_name: str, artifact: Any, force: bool = False) -> None:
         artifacts[artifact_name] = artifact
         if force:
             artifacts.forced = True
+
     return _store
 
 

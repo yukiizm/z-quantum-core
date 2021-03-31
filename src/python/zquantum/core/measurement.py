@@ -47,7 +47,7 @@ def load_expectation_values(file: LoadSource) -> ExpectationValues:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -66,7 +66,7 @@ def load_wavefunction(file: LoadSource) -> Wavefunction:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -253,7 +253,7 @@ def load_parities(file: LoadSource) -> Parities:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -320,7 +320,7 @@ def get_parities_from_measurements(
     # Count number of occurrences of bitstrings
     bitstring_frequencies = Counter(measurements)
 
-    # Count parity occurences
+    # Count parity occurrences
     values = []
     for _, term in enumerate(ising_operator.terms):
         values.append([0, 0])
@@ -331,7 +331,7 @@ def get_parities_from_measurements(
             else:
                 values[-1][1] += count
 
-    # Count parity occurences for pairwise products of operators
+    # Count parity occurrences for pairwise products of operators
     correlations = [np.zeros((len(ising_operator.terms), len(ising_operator.terms), 2))]
     for term1_index, term1 in enumerate(ising_operator.terms):
         for term2_index, term2 in enumerate(ising_operator.terms):
@@ -514,7 +514,7 @@ class Measurements:
             file (str or file-like object): the name of the file, or a file-like object
         """
         if isinstance(file, str):
-            with open(file, "r") as f:
+            with open(file) as f:
                 data = json.load(f)
         else:
             data = json.load(file)
@@ -621,8 +621,8 @@ class Measurements:
             correlations[i, i] = ising_operator.terms[first_term] ** 2
             for j in range(i):
                 second_term = list(ising_operator.terms.keys())[j]
-                first_term_qubits = set(op[0] for op in first_term)
-                second_term_qubits = set(op[0] for op in second_term)
+                first_term_qubits = {op[0] for op in first_term}
+                second_term_qubits = {op[0] for op in second_term}
                 marked_qubits = first_term_qubits.symmetric_difference(
                     second_term_qubits
                 )
@@ -661,7 +661,11 @@ def concatenate_expectation_values(
         The combined expectation values.
     """
 
-    combined_expectation_values = ExpectationValues(np.zeros(0,))
+    combined_expectation_values = ExpectationValues(
+        np.zeros(
+            0,
+        )
+    )
 
     for expectation_values in expectation_values_set:
         combined_expectation_values.values = np.concatenate(

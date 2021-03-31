@@ -25,24 +25,24 @@ from ..testing.test_cases_for_backend_tests import (
 """
 Note regarding testing specific gates.
 
-To test that a gate is properly implemented, we can ask for its matrix representation 
-and check that each entry is correct. In some quantum simulator packages, 
-returning this matrix representation is either not possible or difficult to implement. 
-In such cases, we can check that the gate implementation is correct by ensuring that 
-the gate transforms input states to output states as expected. If the simulator has 
-the capability to provide the wavefunction as an output, then we can check that 
-the entries of the transformed wavefunction are correct. If the simulator does not 
-have the capability of providing the wavefunction as an output, but only gives 
-bitstring samples from the wavefunction, then we can check that the bitstring statistics 
-are as expected after taking sufficiently many samples. In both of these cases where 
-we cannot directly check the matrix corresponding to the gate, we must check the action 
-of the gate on multiple inputs (and outputs in the sampling case). We can picture 
-this process as a kind of "quantum process tomography" for gate unit testing. Mathematically, 
-correctness is ensured if the span of the input and outputs spans the full vector space. 
-Checking a tomographically complete set of input and outputs could be time consuming, 
-especially in the case of sampling. Furthermore, we expect that the bugs that will occur 
-will lead to an effect on many inputs (rather than, say, a single input-output pair). 
-Therefore, we are taking here a slightly lazy, but efficient approach to testing these gates 
+To test that a gate is properly implemented, we can ask for its matrix representation
+and check that each entry is correct. In some quantum simulator packages,
+returning this matrix representation is either not possible or difficult to implement.
+In such cases, we can check that the gate implementation is correct by ensuring that
+the gate transforms input states to output states as expected. If the simulator has
+the capability to provide the wavefunction as an output, then we can check that
+the entries of the transformed wavefunction are correct. If the simulator does not
+have the capability of providing the wavefunction as an output, but only gives
+bitstring samples from the wavefunction, then we can check that the bitstring statistics
+are as expected after taking sufficiently many samples. In both of these cases where
+we cannot directly check the matrix corresponding to the gate, we must check the action
+of the gate on multiple inputs (and outputs in the sampling case). We can picture
+this process as a kind of "quantum process tomography" for gate unit testing. Mathematically,
+correctness is ensured if the span of the input and outputs spans the full vector space.
+Checking a tomographically complete set of input and outputs could be time consuming,
+especially in the case of sampling. Furthermore, we expect that the bugs that will occur
+will lead to an effect on many inputs (rather than, say, a single input-output pair).
+Therefore, we are taking here a slightly lazy, but efficient approach to testing these gates
 by testing how they transform a tomographically incomplete set of input and outputs.
 
 Gates tests use `backend_for_gates_test` instead of `backend` as an input parameter because:

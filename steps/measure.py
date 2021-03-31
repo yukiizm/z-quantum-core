@@ -184,7 +184,7 @@ def grouped_hamiltonian_analysis(
     groups: str,
     expectation_values: Optional[str] = None,
 ):
-    """Calculates the number of measurements required for computing
+    r"""Calculates the number of measurements required for computing
     the expectation value of a qubit hamiltonian, where co-measurable terms
     are grouped as a list of QubitOperators.
 

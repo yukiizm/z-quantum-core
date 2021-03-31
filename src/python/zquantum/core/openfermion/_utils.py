@@ -121,7 +121,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 def get_qubitop_from_coeffs_and_labels(
     coeffs: List[float], labels: List[List[int]]
 ) -> QubitOperator:
-    """Generates a QubitOperator based on a coefficient vector and
+    r"""Generates a QubitOperator based on a coefficient vector and
     a label matrix.
 
     Args:
@@ -411,7 +411,7 @@ def get_fermion_number_operator(n_qubits, n_particles=None):
     Args:
         n_qubits (int): number of qubits in the system
         n_particles (int): number of particles in the system.
-            If specified, it is substracted from the number
+            If specified, it is subtracted from the number
             operator such as expectation value is zero.
     Returns:
          (openfermion.ops.FermionOperator): the number operator

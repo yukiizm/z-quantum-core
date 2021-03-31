@@ -46,15 +46,15 @@ h2_hamiltonian_grouped = [
     QubitOperator("0.04475014401986127 [Y0 X1 X2 Y3]"),
     QubitOperator("-0.04475014401986127 [Y0 Y1 X2 X3]"),
     QubitOperator(
-        """0.17771287459806312 [Z0] + 
-         0.1705973832722407 [Z0 Z1] + 
-         0.12293305054268083 [Z0 Z2] + 
-         0.1676831945625421 [Z0 Z3] + 
-         0.17771287459806312 [Z1] + 
-         0.1676831945625421 [Z1 Z2] + 
-         0.12293305054268083 [Z1 Z3] + 
-         -0.24274280496459985 [Z2] + 
-         0.17627640802761105 [Z2 Z3] + 
+        """0.17771287459806312 [Z0] +
+         0.1705973832722407 [Z0 Z1] +
+         0.12293305054268083 [Z0 Z2] +
+         0.1676831945625421 [Z0 Z3] +
+         0.17771287459806312 [Z1] +
+         0.1676831945625421 [Z1 Z2] +
+         0.12293305054268083 [Z1 Z3] +
+         -0.24274280496459985 [Z2] +
+         0.17627640802761105 [Z2 Z3] +
          -0.24274280496459985 [Z3]"""
     ),
 ]
@@ -235,7 +235,18 @@ def test_group_comeasureable_terms_greedy_sorted(
 
 @pytest.mark.parametrize(
     "interactionrdm, qubitoperator, sort_terms",
-    [(rdms, h2_hamiltonian, False,), (rdms, h2_hamiltonian, True,),],
+    [
+        (
+            rdms,
+            h2_hamiltonian,
+            False,
+        ),
+        (
+            rdms,
+            h2_hamiltonian,
+            True,
+        ),
+    ],
 )
 def test_get_expectation_values_from_rdms(interactionrdm, qubitoperator, sort_terms):
     expecval = get_expectation_values_from_rdms(
@@ -262,7 +273,18 @@ def test_get_expectation_values_from_rdms(interactionrdm, qubitoperator, sort_te
 
 @pytest.mark.parametrize(
     "interactionrdm, qubitoperator_list, sort_terms",
-    [(rdms, h2_hamiltonian_grouped, False,), (rdms, h2_hamiltonian_grouped, True,),],
+    [
+        (
+            rdms,
+            h2_hamiltonian_grouped,
+            False,
+        ),
+        (
+            rdms,
+            h2_hamiltonian_grouped,
+            True,
+        ),
+    ],
 )
 def test_get_expectation_values_from_rdms_for_qubitoperator_list(
     interactionrdm, qubitoperator_list, sort_terms

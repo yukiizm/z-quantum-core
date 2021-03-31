@@ -58,7 +58,7 @@ def load_interaction_operator(file: LoadSource) -> InteractionOperator:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -153,7 +153,7 @@ def load_qubit_operator(file: LoadSource) -> QubitOperator:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -189,7 +189,7 @@ def load_qubit_operator_set(file: LoadSource) -> List[QubitOperator]:
         qubit_operator_set (list): a list of QubitOperator objects
     """
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -259,7 +259,7 @@ def load_ising_operator(file: LoadSource) -> IsingOperator:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -338,7 +338,7 @@ def load_interaction_rdm(file: LoadSource) -> InteractionRDM:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)

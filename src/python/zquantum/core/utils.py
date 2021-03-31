@@ -69,9 +69,7 @@ def dec2bin(number: int, length: int) -> List[int]:
     """
 
     if pow(2, length) < number:
-        sys.exit(
-            "Insufficient number of bits for representing the number {}".format(number)
-        )
+        sys.exit(f"Insufficient number of bits for representing the number {number}")
 
     bit_str = bin(number)
     bit_str = bit_str[2 : len(bit_str)]  # chop off the first two chars
@@ -103,8 +101,8 @@ def bin2dec(x: List[int]) -> int:
 
 
 """
-The functions PAULI_X, PAULI_Y, PAULI_Z and IDENTITY below are used for 
-generating the generators of the Pauli group, which include Pauli X, Y, Z 
+The functions PAULI_X, PAULI_Y, PAULI_Z and IDENTITY below are used for
+generating the generators of the Pauli group, which include Pauli X, Y, Z
 operators as well as identity operator
 """
 
@@ -314,7 +312,7 @@ class ValueEstimate(float):
 
 
 def load_value_estimate(file: LoadSource) -> ValueEstimate:
-    """Loads value estimate from a faile.
+    """Loads value estimate from a failed.
 
     Args:
         file (str or file-like object): the name of the file, or a file-like object.
@@ -324,7 +322,7 @@ def load_value_estimate(file: LoadSource) -> ValueEstimate:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -357,7 +355,7 @@ def load_list(file: LoadSource) -> List:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -446,7 +444,7 @@ def load_noise_model(file: LoadSource):
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -491,7 +489,7 @@ def create_symbols_map(
     if len(symbols) != len(params):
         raise (
             ValueError(
-                "Length of symbols: {0} doesn't match length of params: {1}".format(
+                "Length of symbols: {} doesn't match length of params: {}".format(
                     len(symbols), len(params)
                 )
             )
@@ -547,7 +545,7 @@ def load_nmeas_estimate(filename: AnyPath) -> Tuple[float, int, np.ndarray]:
         frame_meas: frame measurements (number of measurements per group)
     """
 
-    with open(filename, "r") as f:
+    with open(filename) as f:
         data = json.load(f)
 
     frame_meas = convert_dict_to_array(data["frame_meas"])
