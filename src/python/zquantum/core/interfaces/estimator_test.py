@@ -16,14 +16,14 @@ class EstimatorTests:
         circuit,
         target_operator,
         n_samples,
-        **estimator_kwargs
+        **estimator_kwargs,
     ):
         value = estimator.get_estimated_expectation_values(
             backend=backend,
             circuit=circuit,
             target_operator=target_operator,
             n_samples=n_samples,
-            **estimator_kwargs
+            **estimator_kwargs,
         )
         # Then
         assert type(value) is ExpectationValues

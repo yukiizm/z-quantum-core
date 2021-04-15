@@ -28,7 +28,7 @@ class Optimizer(ABC):
         self,
         cost_function: Union[CallableWithGradient, Callable],
         initial_params: np.ndarray,
-        **kwargs
+        **kwargs,
     ) -> OptimizeResult:
         """Finds the parameters which minimize given cost function.
 

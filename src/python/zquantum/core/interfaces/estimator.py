@@ -19,7 +19,7 @@ class Estimator(ABC, EnforceOverrides):
         circuit: Circuit,
         target_operator: SymbolicOperator,
         n_samples: Optional[int] = None,
-        **estimator_kwargs
+        **estimator_kwargs,
     ) -> ExpectationValues:
         """Estimators take an unknown quantum state (or the circuit that prepares the unknown state) and a list of target functions
         as input and produce a list of estimations as output.

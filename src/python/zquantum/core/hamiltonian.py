@@ -1,4 +1,4 @@
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Tuple
 
 import numpy as np
 from openfermion.ops import InteractionOperator, InteractionRDM, QubitOperator
@@ -44,7 +44,9 @@ def group_comeasureable_terms_greedy(
         A list of qubit operators.
     """
 
-    groups = []  # List of QubitOperators representing groups of co-measureable terms
+    groups: List = (
+        []
+    )  # List of QubitOperators representing groups of co-measureable terms
 
     if sort_terms:
         terms_iterator = sorted(
@@ -222,8 +224,8 @@ def get_expectation_values_from_rdms(
 
 def estimate_nmeas_for_operator(
     operator: QubitOperator,
-    decomposition_method: Optional[str] = "greedy-sorted",
-    expecval: Optional[ExpectationValues] = None,
+    decomposition_method: str = "greedy-sorted",
+    expecval: ExpectationValues = None,
 ):
     """Calculates the number of measurements required for computing
     the expectation value of a qubit hamiltonian, where co-measurable terms
@@ -246,7 +248,7 @@ def estimate_nmeas_for_operator(
 
 def estimate_nmeas_for_frames(
     frame_operators: List[QubitOperator],
-    expecval: Optional[ExpectationValues] = None,
+    expecval: ExpectationValues = None,
 ) -> Tuple[float, int, np.array]:
     r"""Calculates the number of measurements required for computing
     the expectation value of a qubit hamiltonian, where co-measurable terms

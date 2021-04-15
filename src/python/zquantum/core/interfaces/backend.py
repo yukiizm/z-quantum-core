@@ -66,7 +66,7 @@ class QuantumBackend(ABC):
         self,
         circuit_set: Iterable[Circuit],
         n_samples: Optional[List[int]] = None,
-        **kwargs
+        **kwargs,
     ) -> List[Measurements]:
         """Run a set of circuits and measure a certain number of bitstrings.
 

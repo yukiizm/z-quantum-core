@@ -76,7 +76,7 @@ def get_ground_state_cost_function(
             circuit,
             target_operator,
             n_samples=backend.n_samples,
-            **estimator_kwargs
+            **estimator_kwargs,
         )
 
         return ValueEstimate(np.sum(expectation_values.values))
@@ -201,7 +201,7 @@ class AnsatzBasedCostFunction:
             circuit,
             self.target_operator,
             n_samples=self.n_samples,
-            **self.estimator_kwargs
+            **self.estimator_kwargs,
         )
 
         return sum_expectation_values(expectation_values)

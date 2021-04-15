@@ -367,7 +367,7 @@ def load_circuit_connectivity(file):
 
 
 def build_circuit_layers_and_connectivity(
-    x_dimension, y_dimension=None, layer_type="nearest-neighbor"
+    x_dimension: int, y_dimension: int = None, layer_type: str = "nearest-neighbor"
 ):
     """Function to generate circuit layers for 1-dimensional and 2-dimensional
     arrays of qubits
@@ -476,7 +476,7 @@ def _build_circuit_layers_and_connectivity_nearest_neighbors(n_qubits):
     """
     even_layer = []
     odd_layer = []
-    for index in range(n_qubits - 1, 2):
+    for index in range(0, n_qubits - 1, 2):
         even_layer.append((index, index + 1))
     for index in range(1, n_qubits - 1, 2):
         odd_layer.append((index, index + 1))
