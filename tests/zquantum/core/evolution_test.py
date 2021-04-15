@@ -1,18 +1,18 @@
 import unittest
-import cirq
 from math import pi
-import numpy as np
 
+import cirq
+import numpy as np
+import sympy
+from pyquil.paulis import PauliSum, PauliTerm
 from zquantum.core.evolution import (
+    generate_circuit_sequence,
     time_evolution,
     time_evolution_derivatives,
-    generate_circuit_sequence,
     time_evolution_for_term,
 )
-from zquantum.core.utils import compare_unitary
 from zquantum.core.testing import create_random_circuit
-from pyquil.paulis import PauliSum, PauliTerm
-import sympy
+from zquantum.core.utils import compare_unitary
 
 
 class TestTimeEvolution(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestTimeEvolution(unittest.TestCase):
         circuit = cirq.Circuit()
         q1 = cirq.LineQubit(0)
         q2 = cirq.LineQubit(1)
-        for _ in range(0, order):
+        for _ in range(order):
             circuit.append(
                 cirq.XX(q1, q2)
                 ** (hamiltonian.terms[0].coefficient * 2 * time / order / pi)
@@ -72,7 +72,7 @@ class TestTimeEvolution(unittest.TestCase):
         circuit = cirq.Circuit()
         q1 = cirq.LineQubit(0)
         q2 = cirq.LineQubit(1)
-        for _ in range(0, order):
+        for _ in range(order):
             circuit.append(
                 cirq.XX(q1, q2)
                 ** (hamiltonian.terms[0].coefficient * 2 * time_value / order / pi)
@@ -109,7 +109,7 @@ class TestTimeEvolution(unittest.TestCase):
         )
         time_symbol = sympy.Symbol("t")
         time_value = 0.4
-        symbols_map = [(time_symbol, time_value)]
+        [(time_symbol, time_value)]
 
         order = 3
         reference_factors_1 = [1.0 / order, 0.5 / order, 0.3 / order] * 3
@@ -197,7 +197,7 @@ class TestTimeEvolution(unittest.TestCase):
 
         # When/Then
         with self.assertRaises(ValueError):
-            sequence = generate_circuit_sequence(
+            generate_circuit_sequence(
                 repeated_circuit, different_circuit, length, position
             )
 

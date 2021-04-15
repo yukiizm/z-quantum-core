@@ -1,12 +1,11 @@
 import warnings
-import numpy as np
-
 from abc import ABC, abstractmethod
-from typing import Optional, List, Iterable
+from typing import Iterable, List, Optional
+
+import numpy as np
 from openfermion import IsingOperator, SymbolicOperator
-from pyquil.wavefunction import Wavefunction
 from overrides import overrides
-import warnings
+from pyquil.wavefunction import Wavefunction
 
 from ..bitstring_distribution import (
     BitstringDistribution,
@@ -14,7 +13,7 @@ from ..bitstring_distribution import (
 )
 from ..circuit import Circuit, CircuitConnectivity
 from ..measurement import ExpectationValues, Measurements, expectation_values_to_real
-from ..openfermion import get_expectation_value, change_operator_type
+from ..openfermion import change_operator_type, get_expectation_value
 
 
 class QuantumBackend(ABC):
@@ -213,7 +212,7 @@ class QuantumSimulator(QuantumBackend):
             zquantum.core.measurement.ExpectationValues: the expectation values
                 of each term in the operator
         """
-        if self.n_samples == None:
+        if self.n_samples is None:
             return self.get_exact_expectation_values(circuit, operator, **kwargs)
         else:
             return super().get_expectation_values(circuit, operator, **kwargs)
@@ -293,7 +292,7 @@ class QuantumSimulator(QuantumBackend):
             BitstringDistribution: object representing the probabilities of getting specific bistrings.
 
         """
-        if self.n_samples == None:
+        if self.n_samples is None:
             wavefunction = self.get_wavefunction(circuit, **kwargs)
             return create_bitstring_distribution_from_probability_distribution(
                 wavefunction.probabilities()

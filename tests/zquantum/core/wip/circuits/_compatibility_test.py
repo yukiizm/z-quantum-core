@@ -1,13 +1,11 @@
-import pytest
-import pyquil
-import sympy
 import numpy as np
+import pyquil
 import pyquil.gates
-
+import pytest
+import sympy
 import zquantum.core.circuit as old_circuit
-from zquantum.core.wip.circuits._compatibility import new_circuit_from_old_circuit
 import zquantum.core.wip.circuits as new_circuits
-
+from zquantum.core.wip.circuits._compatibility import new_circuit_from_old_circuit
 
 PYQUIL_PROGRAMS = [
     pyquil.Program(),
@@ -26,6 +24,7 @@ def _new_circuit_from_pyquil(program):
 
 
 THETA_1 = sympy.Symbol("theta_1")
+
 
 def _make_old_parametric_circuit():
     qubit = old_circuit.Qubit(0)
@@ -47,7 +46,7 @@ def _make_old_parametric_circuit():
         ],
         (
             _make_old_parametric_circuit(),
-            new_circuits.Circuit([new_circuits.RX(THETA_1)(0)]), 
+            new_circuits.Circuit([new_circuits.RX(THETA_1)(0)]),
         ),
     ],
 )

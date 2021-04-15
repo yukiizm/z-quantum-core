@@ -1,12 +1,13 @@
-from pyquil import Program
-from pyquil.gates import *
-from pyquil.wavefunction import Wavefunction
 import math
 import random
+
 import numpy as np
-from openfermion.ops import QubitOperator, IsingOperator
+from openfermion.ops import IsingOperator, QubitOperator
+from pyquil import Program
+from pyquil.gates import CNOT, CPHASE, CZ, PHASE, RX, RY, RZ, SWAP, H, S, T, X, Y, Z
+from pyquil.wavefunction import Wavefunction
+
 from ..circuit import Circuit
-from ..utils import RNDSEED
 
 
 def create_random_circuit(nqubits, ngates, seed=None):
@@ -34,7 +35,7 @@ def create_random_circuit(nqubits, ngates, seed=None):
 
     ALL = [SING_ZERO, TWO_ZERO, SING_ONE, TWO_ONE]
 
-    NUM_QUBITS = range(0, nqubits)
+    NUM_QUBITS = range(nqubits)
 
     if seed is not None:
         random.seed(seed)
@@ -43,7 +44,7 @@ def create_random_circuit(nqubits, ngates, seed=None):
     p = Program()
 
     # Loop to add gates to pyquil circuit
-    for i in range(0, ngates):
+    for i in range(ngates):
         # Pick gate type
         TYPE_OF_GATE = random.choice(ALL)
         gate = random.choice(TYPE_OF_GATE)
@@ -93,7 +94,7 @@ def create_random_qubitop(nqubits, nterms, seed=None):
     Returns:
         None, a Qubit Operator (openfermion.QubitOperator) object is saved under 'qubitop.json'
     """
-    NUM_QUBITS = range(0, nqubits)
+    NUM_QUBITS = range(nqubits)
 
     if seed is not None:
         random.seed(seed)
@@ -102,7 +103,7 @@ def create_random_qubitop(nqubits, nterms, seed=None):
     qubitop = QubitOperator()
 
     # Loop over number of separate terms in qubit operator
-    for i in range(0, nterms):
+    for i in range(nterms):
         # Choose number of paulis to measure in term
         num_paulis = random.choice(range(nqubits + 1))
 
@@ -113,7 +114,7 @@ def create_random_qubitop(nqubits, nterms, seed=None):
         full_term = ""
 
         # Loop over paulis
-        for j in range(0, num_paulis):
+        for j in range(num_paulis):
             # Choose random qubit
             qubit_index = random.choice(NUM_QUBITS)
             while qubit_index in qubits:
@@ -147,7 +148,7 @@ def create_random_isingop(nqubits, nterms, seed=None):
     Returns:
         an Ising Operator (openfermion.IsingOperator) object
     """
-    NUM_QUBITS = range(0, nqubits)
+    NUM_QUBITS = range(nqubits)
 
     if seed is not None:
         random.seed(seed)
@@ -156,7 +157,7 @@ def create_random_isingop(nqubits, nterms, seed=None):
     isingop = IsingOperator()
 
     # Loop over number of separate terms in qubit operator
-    for i in range(0, nterms):
+    for i in range(nterms):
         # Choose number of paulis to measure in term
         num_paulis = random.choice(range(nqubits + 1))
 
@@ -167,7 +168,7 @@ def create_random_isingop(nqubits, nterms, seed=None):
         full_term = ""
 
         # Loop over paulis
-        for j in range(0, num_paulis):
+        for j in range(num_paulis):
             # Choose random qubit
             qubit_index = random.choice(NUM_QUBITS)
             while qubit_index in qubits:

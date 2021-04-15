@@ -1,11 +1,12 @@
-import networkx as nx
 import json
-from itertools import combinations
 import random
 from random import uniform
-from .utils import SCHEMA_VERSION
 from typing import Optional
-from zquantum.core.typing import LoadSource, AnyPath
+
+import networkx as nx
+from zquantum.core.typing import AnyPath, LoadSource
+
+from .utils import SCHEMA_VERSION
 
 
 def save_graph(graph: nx.Graph, filename: AnyPath):
@@ -33,7 +34,7 @@ def load_graph(file: LoadSource) -> nx.Graph:
     """
 
     if isinstance(file, str):
-        with open(file, "r") as f:
+        with open(file) as f:
             data = json.load(f)
     else:
         data = json.load(file)
@@ -195,12 +196,12 @@ def generate_graph_from_specs(graph_specs: dict) -> nx.Graph:
         A networkx.Graph object
     """
     type_graph = graph_specs["type_graph"]
-    num_nodes = graph_specs.get("num_nodes")
+    num_nodes: int = graph_specs.get("num_nodes")
     random_weights = graph_specs.get("random_weights", False)
-    seed = graph_specs.get("seed")
-    number_of_cliques = graph_specs.get("number_of_cliques")
-    size_of_cliques = graph_specs.get("size_of_cliques")
-    length_of_ladder = graph_specs.get("length_of_ladder")
+    seed: int = graph_specs.get("seed")
+    number_of_cliques: int = graph_specs.get("number_of_cliques")
+    size_of_cliques: int = graph_specs.get("size_of_cliques")
+    length_of_ladder: int = graph_specs.get("length_of_ladder")
     number_of_vertices_complete_graph = graph_specs.get(
         "number_of_vertices_complete_graph"
     )

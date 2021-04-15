@@ -1,6 +1,6 @@
 """Tools for building compatibility layers."""
 import warnings
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 
 class TranslationFailed(Exception):
@@ -10,8 +10,6 @@ class TranslationFailed(Exception):
     occurring because of translation failure (that should be intercepted) and others
     (which should be propagated).
     """
-
-    pass
 
 
 def _translate_if_needed(
@@ -68,6 +66,7 @@ def compatible_with_old_type(
     Raises:
         TranslationFailure: if translation failed and no fallback_function is provided.
     """
+
     def _compatible_with_old_type(wrapped: Callable):
         def _inner(*args, **kwargs):
             try:

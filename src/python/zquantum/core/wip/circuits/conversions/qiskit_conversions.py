@@ -1,15 +1,13 @@
-from typing import Tuple, List, NamedTuple, Union, Dict
 import hashlib
+from typing import Dict, List, NamedTuple, Tuple, Union
 
-import qiskit
 import numpy as np
+import qiskit
 import sympy
 
-from .. import _gates
-from .. import _builtin_gates
-from .. import _circuit
-from ..symbolic.sympy_expressions import expression_from_sympy, SYMPY_DIALECT
-from ..symbolic.qiskit_expressions import expression_from_qiskit, QISKIT_DIALECT
+from .. import _builtin_gates, _circuit, _gates
+from ..symbolic.qiskit_expressions import QISKIT_DIALECT, expression_from_qiskit
+from ..symbolic.sympy_expressions import SYMPY_DIALECT, expression_from_sympy
 from ..symbolic.translations import translate_expression
 
 QiskitOperation = Tuple[
@@ -222,7 +220,7 @@ def _apply_custom_gate(
     gate_def = custom_defs_map[anon_op.gate_name]
     # Qiskit doesn't support custom gates with parametrized matrices
     # so we can assume empty params list.
-    gate_params = tuple()
+    gate_params = ()
     gate = gate_def(*gate_params)
 
     return gate(*anon_op.qubit_indices)
@@ -234,7 +232,7 @@ def import_from_qiskit(circuit: qiskit.QuantumCircuit) -> _circuit.Circuit:
 
     # Qiskit doesn't support custom gates with parametrized matrices
     # so we can assume empty params list.
-    params_ordering = tuple()
+    params_ordering = ()
     custom_defs = {
         anon_op.gate_name: _gates.CustomGateDefinition(
             gate_name=anon_op.gate_name,
@@ -276,7 +274,7 @@ def _import_qiskit_op(qiskit_op, qiskit_qubits) -> ImportedOperation:
 
 
 def _import_qiskit_op_via_mapping(
-    qiskit_gate: qiskit.circuit.Instruction, qiskit_qubits: [qiskit.circuit.Qubit]
+    qiskit_gate: qiskit.circuit.Instruction, qiskit_qubits: List[qiskit.circuit.Qubit]
 ) -> _gates.GateOperation:
     try:
         gate_ref = QISKIT_ZQUANTUM_GATE_MAP[type(qiskit_gate)]
@@ -295,7 +293,8 @@ def _import_qiskit_op_via_mapping(
 
 
 def _import_controlled_qiskit_op(
-    qiskit_gate: qiskit.circuit.ControlledGate, qiskit_qubits: [qiskit.circuit.Qubit]
+    qiskit_gate: qiskit.circuit.ControlledGate,
+    qiskit_qubits: List[qiskit.circuit.Qubit],
 ) -> _gates.GateOperation:
     if not isinstance(qiskit_gate, qiskit.circuit.ControlledGate):
         # Raising an exception here is redundant to the type hint, but it allows us

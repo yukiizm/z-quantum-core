@@ -1,10 +1,10 @@
 """Base class for qubit"""
 
-import pyquil
 import cirq
+import pyquil
 
 
-class Qubit(object):
+class Qubit:
     """Class for storing information associated with a qubit.
 
     Attributes:
@@ -60,9 +60,7 @@ class Qubit(object):
         if isinstance(pyquil_qubit, pyquil.quilatom.Qubit):
             output.index = pyquil_qubit.index
         else:
-            raise TypeError(
-                "Input item {} not a pyquil Qubit object".format(pyquil_qubit)
-            )
+            raise TypeError(f"Input item {pyquil_qubit} not a pyquil Qubit object")
         return output
 
     @classmethod
@@ -92,13 +90,11 @@ class Qubit(object):
         output = cls(index)
         output.info["label"] = "cirq"
         if isinstance(cirq_qubit, cirq.GridQubit):
-            qubit_key = lambda q: (q.row, q.col)
             output.info["QubitType"] = "GridQubit"
-            output.info["QubitKey"] = qubit_key(cirq_qubit)
+            output.info["QubitKey"] = (cirq_qubit.row, cirq_qubit.col)
         elif isinstance(cirq_qubit, cirq.LineQubit):
-            qubit_key = lambda q: q.x
             output.info["QubitType"] = "LineQubit"
-            output.info["QubitKey"] = qubit_key(cirq_qubit)
+            output.info["QubitKey"] = cirq_qubit.x
         else:
             raise ValueError("Qubit type {} not yet supported".format(type(cirq_qubit)))
 

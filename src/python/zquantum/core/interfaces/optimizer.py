@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import Callable, Dict, Optional, Union
+
+import numpy as np
 import scipy
 from scipy.optimize import OptimizeResult
 from zquantum.core.interfaces.functions import CallableWithGradient
-from typing import Optional, Dict, Union, Callable
-import numpy as np
 
 
 class Optimizer(ABC):
@@ -41,7 +42,9 @@ class Optimizer(ABC):
         raise NotImplementedError
 
 
-def optimization_result(*, opt_value, opt_params, **kwargs) -> scipy.optimize.OptimizeResult:
+def optimization_result(
+    *, opt_value, opt_params, **kwargs
+) -> scipy.optimize.OptimizeResult:
     """Construct instance of OptimizeResult.
 
     The purpose of this function is to add a safety layer by detecting if required
@@ -56,7 +59,5 @@ def optimization_result(*, opt_value, opt_params, **kwargs) -> scipy.optimize.Op
         other passed arguments.
     """
     return scipy.optimize.OptimizeResult(
-        opt_value=opt_value,
-        opt_params=opt_params,
-        **kwargs
+        opt_value=opt_value, opt_params=opt_params, **kwargs
     )

@@ -1,49 +1,45 @@
-import unittest
 import random
-import numpy as np
-import pyquil
-import os
-import pkg_resources
+import unittest
 
-from cirq import GridQubit, LineQubit, X, Y, Z, PauliSum, PauliString
+import numpy as np
+import pkg_resources
+import pyquil
+from cirq import GridQubit, LineQubit, PauliString, PauliSum, X, Y, Z
 from openfermion import (
-    QubitOperator,
-    IsingOperator,
     FermionOperator,
-    qubit_operator_sparse,
-    get_interaction_operator,
+    IsingOperator,
+    QubitOperator,
     get_fermion_operator,
-    jordan_wigner,
+    get_interaction_operator,
     get_sparse_operator,
+    jordan_wigner,
+    qubit_operator_sparse,
 )
 from openfermion.hamiltonians import fermi_hubbard
 from openfermion.linalg import jw_get_ground_state_at_particle_number
-
 from zquantum.core.circuit import Circuit, Gate, Qubit, build_uniform_param_grid
-from zquantum.core.measurement import ExpectationValues
-from zquantum.core.utils import RNDSEED, create_object, hf_rdm
 from zquantum.core.interfaces.mock_objects import MockAnsatz
-
+from zquantum.core.measurement import ExpectationValues
 from zquantum.core.openfermion._io import load_interaction_operator
-
 from zquantum.core.openfermion._utils import (
-    generate_random_qubitop,
-    get_qubitop_from_coeffs_and_labels,
-    evaluate_qubit_operator,
-    get_qubitop_from_matrix,
-    reverse_qubit_order,
-    get_expectation_value,
     change_operator_type,
-    evaluate_operator_for_parameter_grid,
-    get_fermion_number_operator,
-    get_diagonal_component,
-    get_polynomial_tensor,
-    qubitop_to_paulisum,
     create_circuits_from_qubit_operator,
+    evaluate_operator_for_parameter_grid,
+    evaluate_qubit_operator,
     evaluate_qubit_operator_list,
+    generate_random_qubitop,
+    get_diagonal_component,
+    get_expectation_value,
+    get_fermion_number_operator,
     get_ground_state_rdm_from_qubit_op,
+    get_polynomial_tensor,
+    get_qubitop_from_coeffs_and_labels,
+    get_qubitop_from_matrix,
+    qubitop_to_paulisum,
     remove_inactive_orbitals,
+    reverse_qubit_order,
 )
+from zquantum.core.utils import RNDSEED, create_object, hf_rdm
 
 
 class TestQubitOperator(unittest.TestCase):
@@ -259,7 +255,7 @@ class TestQubitOperator(unittest.TestCase):
 
     def test_create_circuits_from_qubit_operator(self):
         # Initialize target
-        qubits = [Qubit(i) for i in range(0, 2)]
+        qubits = [Qubit(i) for i in range(2)]
 
         gate_Z0 = Gate("Z", [qubits[0]])
         gate_X1 = Gate("X", [qubits[1]])
@@ -443,7 +439,9 @@ class TestOtherUtils(unittest.TestCase):
 
     def test_remove_inactive_orbitals(self):
         fermion_ham = load_interaction_operator(
-            pkg_resources.resource_filename("zquantum.core.testing", "hamiltonian_HeH_plus_STO-3G.json")
+            pkg_resources.resource_filename(
+                "zquantum.core.testing", "hamiltonian_HeH_plus_STO-3G.json"
+            )
         )
         frozen_ham = remove_inactive_orbitals(fermion_ham, 1, 1)
         self.assertEqual(frozen_ham.one_body_tensor.shape[0], 2)

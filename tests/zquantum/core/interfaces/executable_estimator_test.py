@@ -3,23 +3,25 @@
 """
 
 
-from pyquil import Program
-from pyquil.gates import X
-from openfermion import QubitOperator, qubit_operator_sparse, IsingOperator
 import numpy as np
 import pytest
-
-from zquantum.core.interfaces.estimator_test import EstimatorTests
-from zquantum.core.interfaces.mock_objects import MockQuantumBackend, MockQuantumSimulator
+from openfermion import IsingOperator, QubitOperator, qubit_operator_sparse
+from pyquil import Program
+from pyquil.gates import X
+from zquantum.core.circuit import Circuit
 from zquantum.core.estimator import (
     BasicEstimator,
     ExactEstimator,
+    allocate_shots,
     get_context_selection_circuit,
     get_context_selection_circuit_for_group,
-    allocate_shots,
+)
+from zquantum.core.interfaces.estimator_test import EstimatorTests
+from zquantum.core.interfaces.mock_objects import (
+    MockQuantumBackend,
+    MockQuantumSimulator,
 )
 from zquantum.core.measurement import ExpectationValues
-from zquantum.core.circuit import Circuit
 
 
 class TestEstimatorUtils:
@@ -135,7 +137,7 @@ class TestEstimatorUtils:
     ):
 
         with pytest.raises(ValueError):
-            measurements = allocate_shots(
+            allocate_shots(
                 shot_allocation_strategy,
                 frame_operators,
                 n_samples=n_samples,
@@ -204,7 +206,7 @@ class TestBasicEstimator(EstimatorTests):
         # Given
         backend.n_samples = 5
         # When
-        values = estimator.get_estimated_expectation_values(
+        estimator.get_estimated_expectation_values(
             backend, circuit, target_operator, n_samples=10
         )
         # Then
@@ -335,7 +337,7 @@ class TestExactEstimator(EstimatorTests):
     ):
         backend = MockQuantumBackend()
         with pytest.raises(AttributeError):
-            value = estimator.get_estimated_expectation_values(
+            estimator.get_estimated_expectation_values(
                 backend=backend,
                 circuit=circuit,
                 target_operator=target_operator,

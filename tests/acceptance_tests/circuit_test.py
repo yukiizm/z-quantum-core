@@ -1,40 +1,43 @@
-import pytest
+import copy
+import json
 import os
 import sys
-import json
-import numpy as np
-import copy
 
-from zquantum.core import circuit
-from zquantum.core.utils import RNDSEED, create_object
+import numpy as np
+import pytest
+from zquantum.core.circuit import Circuit
 from zquantum.core.circuit import (
-    load_circuit_template_params,
-    save_circuit_template_params,
-    load_circuit,
-    save_circuit,
-    save_circuit_set,
-    load_circuit_set,
-    load_parameter_grid,
-    load_circuit_layers,
-    load_circuit_connectivity,
-    Circuit,
-    build_uniform_param_grid as _build_uniform_param_grid,
-    build_circuit_layers_and_connectivity as _build_circuit_layers_and_connectivity,
     add_ancilla_register_to_circuit as _add_ancilla_register_to_circuit,
 )
+from zquantum.core.circuit import (
+    build_circuit_layers_and_connectivity as _build_circuit_layers_and_connectivity,
+)
+from zquantum.core.circuit import build_uniform_param_grid as _build_uniform_param_grid
+from zquantum.core.circuit import (
+    load_circuit,
+    load_circuit_connectivity,
+    load_circuit_layers,
+    load_circuit_set,
+    load_circuit_template_params,
+    load_parameter_grid,
+    save_circuit,
+    save_circuit_set,
+    save_circuit_template_params,
+)
 from zquantum.core.testing import create_random_circuit as _create_random_circuit
+from zquantum.core.utils import RNDSEED, create_object
 
 sys.path.append("../..")
 from steps.circuit import (
+    add_ancilla_register_to_circuit,
+    batch_circuits,
     build_ansatz_circuit,
+    build_circuit_layers_and_connectivity,
+    build_uniform_param_grid,
+    combine_ansatz_params,
+    concatenate_circuits,
     create_random_circuit,
     generate_random_ansatz_params,
-    combine_ansatz_params,
-    build_uniform_param_grid,
-    build_circuit_layers_and_connectivity,
-    add_ancilla_register_to_circuit,
-    concatenate_circuits,
-    batch_circuits,
 )
 
 
@@ -99,10 +102,7 @@ class TestGenerateRandomAnsatzParams:
         finally:
             remove_file_if_exists(filename)
 
-    @pytest.mark.parametrize(
-        "number_of_parameters",
-        [i for i in range(12)],
-    )
+    @pytest.mark.parametrize("number_of_parameters", list(range(12)))
     def test_generate_random_ansatz_params_using_number_of_parameters(
         self,
         number_of_parameters,
@@ -616,7 +616,7 @@ class TestCreateRandomCircuit:
 
 
 class TestAddAncillaRegisterToCircuitPythonObject:
-    @pytest.fixture(params=[i for i in range(1, 20, 3)])
+    @pytest.fixture(params=list(range(1, 20, 3)))
     def number_of_ancilla_qubits(self, request):
         return request.param
 
@@ -693,7 +693,7 @@ class TestAddAncillaRegisterToCircuitPythonObject:
 
 
 class TestConcatenateCircuits:
-    @pytest.fixture(params=[i for i in range(1, 20, 3)])
+    @pytest.fixture(params=list(range(1, 20, 3)))
     def number_of_circuits(self, request):
         return request.param
 
@@ -767,7 +767,7 @@ class TestBatchCircuits:
     def input_circuits_filenames(self, input_circuits):
         circuit_filenames = []
         for i, circuit in enumerate(input_circuits):
-            circuit_filenames.append("circuit-{}.json".format(i))
+            circuit_filenames.append(f"circuit-{i}.json")
             save_circuit(circuit, circuit_filenames[i])
 
         yield circuit_filenames

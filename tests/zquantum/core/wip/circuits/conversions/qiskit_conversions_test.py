@@ -1,17 +1,13 @@
-import sympy
 import numpy as np
+import pytest
 import qiskit
 import qiskit.circuit.random
-import pytest
-
+import sympy
+from zquantum.core.wip.circuits import _builtin_gates, _circuit, _gates
 from zquantum.core.wip.circuits.conversions.qiskit_conversions import (
     export_to_qiskit,
     import_from_qiskit,
 )
-from zquantum.core.wip.circuits import _gates
-from zquantum.core.wip.circuits import _builtin_gates
-from zquantum.core.wip.circuits import _circuit
-
 
 # --------- gates ---------
 
@@ -224,12 +220,12 @@ EQUIVALENT_PARAMETRIZED_CIRCUITS = [
 UNITARY_GATE_DEF = _gates.CustomGateDefinition(
     "unitary.33c11b461fe67e717e37ac34a568cd1c27a89013703bf5b84194f0732a33a26d",
     sympy.Matrix([[0, 1], [1, 0]]),
-    tuple(),
+    (),
 )
 CUSTOM_A2_GATE_DEF = _gates.CustomGateDefinition(
     "custom.A2.33c11b461fe67e717e37ac34a568cd1c27a89013703bf5b84194f0732a33a26d",
     sympy.Matrix([[0, 1], [1, 0]]),
-    tuple(),
+    (),
 )
 
 

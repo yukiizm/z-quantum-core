@@ -1,10 +1,11 @@
-import openfermion, pyquil
-from pyquil.paulis import exponentiate as pyquil_exponentiate
-from .openfermion import qubitop_to_pyquilpauli
+from typing import List, Tuple, Union
+
 import numpy as np
-from .circuit import Circuit
-from typing import Tuple, List, Union
+import pyquil
 import sympy
+from pyquil.paulis import exponentiate as pyquil_exponentiate
+
+from .circuit import Circuit
 
 
 def time_evolution(
@@ -30,14 +31,14 @@ def time_evolution(
 
     if method == "Trotter":
         output = Circuit()
-        for index_order in range(0, trotter_order):  # iterate over Trotter orders
-            for index_term in range(0, len(hamiltonian.terms)):
+        for index_order in range(trotter_order):  # iterate over Trotter orders
+            for index_term in range(len(hamiltonian.terms)):
                 output += time_evolution_for_term(
                     hamiltonian[index_term], time / trotter_order
                 )
 
     else:
-        raise ValueError("Currently the method {} is not supported".format(method))
+        raise ValueError(f"Currently the method {method} is not supported")
 
     return output
 
@@ -68,7 +69,7 @@ def time_evolution_derivatives(
         factors = [1.0, -1.0]
         output_factors = []
 
-        for index_term1 in range(0, len(hamiltonian.terms)):
+        for index_term1 in range(len(hamiltonian.terms)):
 
             for factor in factors:
 
@@ -80,7 +81,7 @@ def time_evolution_derivatives(
                 output_factors.append(factor * r)
                 shift = factor * (np.pi / (4.0 * r))
 
-                for index_term2 in range(0, len(hamiltonian.terms)):
+                for index_term2 in range(len(hamiltonian.terms)):
                     if index_term1 == index_term2:
                         expitH_circuit = time_evolution_for_term(
                             hamiltonian[index_term2], ((time + shift) / trotter_order)
@@ -103,7 +104,7 @@ def time_evolution_derivatives(
                 hamiltonian, time, method="Trotter", trotter_order=1
             )
 
-            for position in range(0, trotter_order):
+            for position in range(trotter_order):
                 for circuit_factor, different_circuit in zip(
                     output_factors, single_trotter_derivatives
                 ):
@@ -123,7 +124,7 @@ def time_evolution_derivatives(
 
     else:
 
-        raise ValueError("Currently the method {} is not supported".format(method))
+        raise ValueError(f"Currently the method {method} is not supported")
 
 
 def generate_circuit_sequence(

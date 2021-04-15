@@ -1,32 +1,30 @@
-import numpy as np
-import random
 import itertools
-import cirq
+import random
+from typing import List, Optional, Union
 
+import cirq
+import numpy as np
 from openfermion import (
     FermionOperator,
+    InteractionOperator,
+    InteractionRDM,
+    PolynomialTensor,
     QubitOperator,
     count_qubits,
-    InteractionOperator,
-    PolynomialTensor,
-    number_operator,
-    normal_ordered,
-    get_sparse_operator,
-    get_interaction_operator,
-    InteractionRDM,
 )
 from openfermion import expectation as openfermion_expectation
-from openfermion.linalg import jw_get_ground_state_at_particle_number
-from openfermion.transforms import get_fermion_operator, freeze_orbitals
-from typing import List, Union, Optional
-
-from ..circuit import (
-    Circuit,
-    Gate,
-    Qubit,
+from openfermion import (
+    get_interaction_operator,
+    get_sparse_operator,
+    normal_ordered,
+    number_operator,
 )
-from ..utils import bin2dec, dec2bin, ValueEstimate
+from openfermion.linalg import jw_get_ground_state_at_particle_number
+from openfermion.transforms import freeze_orbitals, get_fermion_operator
+
+from ..circuit import Circuit, Gate, Qubit
 from ..measurement import ExpectationValues, expectation_values_to_real
+from ..utils import ValueEstimate, bin2dec, dec2bin
 
 
 def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
@@ -67,7 +65,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
             raise Exception("LH_expand:decode: input bit string length not 2n")
 
         output_label = list(np.zeros(n))
-        for i in range(0, n):
+        for i in range(n):
             output_label[i] = bin2dec(bit_string[2 * i : 2 * i + 2])
 
         return output_label
@@ -80,7 +78,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
             # element in P for a given column j
 
             j_str = dec2bin(j, n)
-            for index in range(0, n):
+            for index in range(n):
                 if label_vec[index] in [1, 2]:  # flip if X or Y
                     j_str[index] = int(not j_str[index])
             return bin2dec(j_str)
@@ -90,7 +88,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 
             val_nz = 1.0
             j_str = dec2bin(j, n)
-            for index in range(0, n):
+            for index in range(n):
                 if label_vec[index] == 2:
                     if j_str[index] == 0:
                         val_nz = val_nz * (1j)
@@ -103,7 +101,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 
         # Compute the trace
         tr = 0.0
-        for j in range(0, 2 ** n):  # loop over the columns
+        for j in range(2 ** n):  # loop over the columns
             tr = tr + operator[j][f(j)] * nz(j)
 
         return tr / 2 ** n
@@ -111,7 +109,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
     # Expand the operator in Pauli basis
     coeffs = list(np.zeros(4 ** n))
     labels = list(np.zeros(4 ** n))
-    for i in range(0, 4 ** n):  # loop over all 2n-bit strings
+    for i in range(4 ** n):  # loop over all 2n-bit strings
         current_string = dec2bin(i, 2 * n)  # see util.py
         current_label = decode(current_string)
         coeffs[i] = trace_product(current_label)
@@ -123,7 +121,7 @@ def get_qubitop_from_matrix(operator: List[List]) -> QubitOperator:
 def get_qubitop_from_coeffs_and_labels(
     coeffs: List[float], labels: List[List[int]]
 ) -> QubitOperator:
-    """Generates a QubitOperator based on a coefficient vector and
+    r"""Generates a QubitOperator based on a coefficient vector and
     a label matrix.
 
     Args:
@@ -144,7 +142,7 @@ def get_qubitop_from_coeffs_and_labels(
     """
 
     output = QubitOperator()
-    for i in range(0, len(labels)):
+    for i in range(len(labels)):
         string_term = ""
         for ind, elem in enumerate(labels[i]):
             pauli_symbol = ""
@@ -188,7 +186,7 @@ def generate_random_qubitop(
         coeffs = [max_coeff] * nterms
     else:
         coeffs = list(np.zeros(nterms))
-        for j in range(0, nterms):
+        for j in range(nterms):
             coeffs[j] = random.uniform(-max_coeff, max_coeff)
 
     # generate random label vector
@@ -196,7 +194,7 @@ def generate_random_qubitop(
     label_set = set()
     j = 0
     while j < nterms:
-        inds_nontrivial = sorted(random.sample(range(0, nqubits), nlocality))
+        inds_nontrivial = sorted(random.sample(range(nqubits), nlocality))
         label = list(np.zeros(nqubits, dtype=int))
         for ind in inds_nontrivial:
             label[ind] = random.randint(1, 3)
@@ -578,11 +576,11 @@ def get_polynomial_tensor(fermion_operator, n_qubits=None):
             tensor_dict[()] = coefficient
 
         else:
-            key = tuple([operator[1] for operator in term])
+            key = tuple(operator[1] for operator in term)
             if tensor_dict.get(key) is None:
                 tensor_dict[key] = np.zeros((n_qubits,) * len(key), complex)
 
-            indices = tuple([operator[0] for operator in term])
+            indices = tuple(operator[0] for operator in term)
             tensor_dict[key][indices] = coefficient
 
     return PolynomialTensor(tensor_dict)
@@ -694,9 +692,9 @@ def get_ground_state_rdm_from_qubit_op(
 
     two_body_tensor = np.zeros((n_qubits,) * 4, dtype=complex)
     for p in range(n_qubits):
-        for q in range(0, p + 1):
+        for q in range(p + 1):
             for r in range(n_qubits):
-                for s in range(0, r + 1):
+                for s in range(r + 1):
                     pdag_qdag_r_s = get_sparse_operator(
                         FermionOperator(f"{p}^ {q}^ {r} {s}"), n_qubits=n_qubits
                     )

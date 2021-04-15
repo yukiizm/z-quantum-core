@@ -1,6 +1,7 @@
-from openfermion.ops import QubitOperator, InteractionRDM, InteractionOperator
+from typing import Callable, List, Optional, Tuple
+
 import numpy as np
-from typing import Tuple, List, Optional, Callable
+from openfermion.ops import InteractionOperator, InteractionRDM, QubitOperator
 
 from .measurement import ExpectationValues, expectation_values_to_real
 
@@ -119,7 +120,7 @@ def compute_group_variances(
         frame_variances: A Numpy array of the computed variances for each frame
     """
 
-    if any([group.terms.get(()) for group in groups]):
+    if any(group.terms.get(()) for group in groups):
         raise ValueError(
             "The list of qubitoperators for measurement estimation should not contain a constant term"
         )
@@ -211,7 +212,7 @@ def get_expectation_values_from_rdms(
     expectations = np.array(list(expectations_packed.terms.values()))
     if np.any(np.abs(np.imag(expectations)) > 1e-3):
         raise RuntimeWarning(
-            f"Expectation values extracted from rdms inside get_expectation_values_from_rdms are complex!"
+            "Expectation values extracted from rdms inside get_expectation_values_from_rdms are complex!"
         )
     expectations = np.real(expectations)
     np.clip(expectations, -1, 1, out=expectations)
@@ -247,7 +248,7 @@ def estimate_nmeas_for_frames(
     frame_operators: List[QubitOperator],
     expecval: Optional[ExpectationValues] = None,
 ) -> Tuple[float, int, np.array]:
-    """Calculates the number of measurements required for computing
+    r"""Calculates the number of measurements required for computing
     the expectation value of a qubit hamiltonian, where co-measurable terms
     are grouped in a single QubitOperator, and different groups are different
     members of the list.
@@ -281,7 +282,7 @@ def estimate_nmeas_for_frames(
     sqrt_lambda = sum(np.sqrt(frame_variances))
     frame_meas = sqrt_lambda * np.sqrt(frame_variances)
     K2 = sum(frame_meas)
-    nterms = sum([len(group.terms) for group in frame_operators])
+    nterms = sum(len(group.terms) for group in frame_operators)
 
     return K2, nterms, frame_meas
 

@@ -1,34 +1,34 @@
-import os
-import numpy as np
 import json
-import pytest
+import os
 import random
+from collections import Counter
+
+import numpy as np
+import pytest
 from openfermion.ops import IsingOperator
+from pyquil.wavefunction import Wavefunction
+from zquantum.core.bitstring_distribution import BitstringDistribution
 from zquantum.core.measurement import (
     ExpectationValues,
+    Measurements,
     Parities,
-    save_expectation_values,
+    check_parity,
+    concatenate_expectation_values,
+    convert_bitstring_to_int,
+    expectation_values_to_real,
+    get_expectation_value_from_frequencies,
+    get_expectation_values_from_parities,
+    get_parities_from_measurements,
     load_expectation_values,
-    save_wavefunction,
+    load_parities,
     load_wavefunction,
     sample_from_wavefunction,
+    save_expectation_values,
     save_parities,
-    load_parities,
-    get_parities_from_measurements,
-    get_expectation_values_from_parities,
-    expectation_values_to_real,
-    convert_bitstring_to_int,
-    check_parity,
-    get_expectation_value_from_frequencies,
-    Measurements,
-    concatenate_expectation_values,
+    save_wavefunction,
 )
-from pyquil.wavefunction import Wavefunction
-
-from zquantum.core.bitstring_distribution import BitstringDistribution
 from zquantum.core.testing import create_random_wavefunction
-from zquantum.core.utils import RNDSEED, convert_bitstrings_to_tuples, SCHEMA_VERSION
-from collections import Counter
+from zquantum.core.utils import RNDSEED, SCHEMA_VERSION, convert_bitstrings_to_tuples
 
 
 def remove_file_if_exists(filename):
@@ -58,7 +58,8 @@ def test_expectation_values_io():
     )
 
     assert np.allclose(
-        expectation_values_object.values, expectation_values_object_loaded.values,
+        expectation_values_object.values,
+        expectation_values_object_loaded.values,
     )
     assert len(expectation_values_object.correlations) == len(
         expectation_values_object_loaded.correlations
@@ -181,7 +182,8 @@ def test_get_expectation_values_from_parities():
 
     assert len(expectation_values.estimator_covariances) == 3
     assert np.allclose(
-        expectation_values.estimator_covariances[0], np.array([[0.014705882352941176]]),
+        expectation_values.estimator_covariances[0],
+        np.array([[0.014705882352941176]]),
     )
     assert np.allclose(
         expectation_values.estimator_covariances[1], np.array([[0.00428797]])
@@ -275,14 +277,16 @@ def test_concatenate_expectation_values_with_cov_and_corr():
     combined_expectation_values = concatenate_expectation_values(expectation_values_set)
     assert len(combined_expectation_values.estimator_covariances) == 3
     assert np.allclose(
-        combined_expectation_values.estimator_covariances[0], [[0.1, 0.2], [0.3, 0.4]],
+        combined_expectation_values.estimator_covariances[0],
+        [[0.1, 0.2], [0.3, 0.4]],
     )
     assert np.allclose(combined_expectation_values.estimator_covariances[1], [[0.1]])
     assert np.allclose(combined_expectation_values.estimator_covariances[2], [[0.2]])
 
     assert len(combined_expectation_values.correlations) == 3
     assert np.allclose(
-        combined_expectation_values.correlations[0], [[-0.1, -0.2], [-0.3, -0.4]],
+        combined_expectation_values.correlations[0],
+        [[-0.1, -0.2], [-0.3, -0.4]],
     )
     assert np.allclose(combined_expectation_values.correlations[1], [[-0.1]])
     assert np.allclose(combined_expectation_values.correlations[2], [[-0.2]])
@@ -328,7 +332,7 @@ class TestMeasurements:
         measurements.save(output_filename)
 
         # Then
-        with open(output_filename, "r") as f:
+        with open(output_filename) as f:
             output_data = json.load(f)
         assert measurements_data == output_data
 
@@ -538,7 +542,6 @@ class TestMeasurements:
             "000": 1 / 9,
             "001": 2 / 9,
             "010": 1 / 9,
-            "011": 1 / 9,
             "011": 1 / 9,
             "100": 1 / 9,
             "101": 1 / 9,
@@ -815,10 +818,14 @@ class TestMeasurements:
                 bitstring_distribution, number_of_samples
             )
 
-            assert measurements.get_counts() == {
-                "00": 25,
-                "11": 26,
-            } or measurements.get_counts() == {"00": 26, "11": 25}
+            assert (
+                measurements.get_counts()
+                == {
+                    "00": 25,
+                    "11": 26,
+                }
+                or measurements.get_counts() == {"00": 26, "11": 25}
+            )
 
             if measurements.get_counts() != previous_measurements.get_counts():
                 got_different_measurements = True

@@ -1,7 +1,12 @@
 """Test cases for ansatz-related utilities."""
 import unittest
 from unittest import mock
-from zquantum.core.interfaces.ansatz_utils import DynamicProperty, ansatz_property, invalidates_parametrized_circuit
+
+from zquantum.core.interfaces.ansatz_utils import (
+    DynamicProperty,
+    ansatz_property,
+    invalidates_parametrized_circuit,
+)
 
 
 class PseudoAnsatz:
@@ -23,13 +28,12 @@ class PseudoAnsatz:
 
         Using this method should invalidate parametrized circuit.
         """
-        pass
 
 
 class DynamicPropertyTests(unittest.TestCase):
-
     def test_uses_default_value(self):
         """DynamicProperty should use default value if it wasn't overwritten."""
+
         class MyCls:
             x = DynamicProperty(name="x", default_value=-15)
 
@@ -38,6 +42,7 @@ class DynamicPropertyTests(unittest.TestCase):
 
     def test_can_be_set_in_init(self):
         """It should be possible to initialize DynamicProperty's value in init method."""
+
         class MyCls:
             length = DynamicProperty(name="length")
 
@@ -49,6 +54,7 @@ class DynamicPropertyTests(unittest.TestCase):
 
     def test_stores_values_in_instance(self):
         """Values of DynamicProperty should be instance-dependent (i.e. should have its own copy)."""
+
         class MyCls:
             height = DynamicProperty(name="height")
 
@@ -65,7 +71,7 @@ class DynamicPropertyTests(unittest.TestCase):
 class TestAnsatzProperty(unittest.TestCase):
     """Test cases for ansatz_property.
 
-    Note that we don't really need an ansatz intance, we only need to check that _parametrized_circuit is
+    Note that we don't really need an ansatz instance, we only need to check that _parametrized_circuit is
     set to None.
     """
 

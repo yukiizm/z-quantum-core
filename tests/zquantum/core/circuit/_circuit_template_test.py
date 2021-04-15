@@ -1,31 +1,31 @@
-import unittest
 import os
-import numpy as np
+import unittest
+
 import cirq
+import numpy as np
+from zquantum.core.circuit import Circuit, Gate, Qubit
 from zquantum.core.circuit._circuit_template import (
-    save_circuit_template,
-    load_circuit_template,
-    save_circuit_template_params,
-    load_circuit_template_params,
-    combine_ansatz_params,
-    build_uniform_param_grid,
-    save_parameter_grid,
-    load_parameter_grid,
-    CircuitLayers,
-    save_circuit_layers,
-    load_circuit_layers,
-    ParameterGrid,
-    save_circuit_ordering,
-    load_circuit_ordering,
-    save_circuit_connectivity,
-    load_circuit_connectivity,
-    build_circuit_layers_and_connectivity,
     CircuitConnectivity,
+    CircuitLayers,
+    ParameterGrid,
+    build_circuit_layers_and_connectivity,
+    build_uniform_param_grid,
+    combine_ansatz_params,
     create_layer_of_gates,
+    load_circuit_connectivity,
+    load_circuit_layers,
+    load_circuit_ordering,
+    load_circuit_template,
+    load_circuit_template_params,
+    load_parameter_grid,
+    save_circuit_connectivity,
+    save_circuit_layers,
+    save_circuit_ordering,
+    save_circuit_template,
+    save_circuit_template_params,
+    save_parameter_grid,
 )
-from zquantum.core.circuit import Gate, Qubit, Circuit
 from zquantum.core.utils import SCHEMA_VERSION, compare_unitary
-from scipy.optimize import OptimizeResult
 
 
 class TestCircuitTemplate(unittest.TestCase):
@@ -57,7 +57,7 @@ class TestCircuitTemplate(unittest.TestCase):
 
     def test_circuit_template_params_io(self):
         # Given
-        params = np.random.rand((10))
+        params = np.random.rand(10)
         filename = "circuit_template_params.json"
 
         # When
@@ -278,7 +278,7 @@ class TestCircuitLayers(unittest.TestCase):
         # Given
         number_of_qubits = 4
         gate_name = "X"
-        qubits = [Qubit(i) for i in range(0, number_of_qubits)]
+        qubits = [Qubit(i) for i in range(number_of_qubits)]
         gate_0 = Gate(gate_name, qubits=[qubits[0]])
         gate_1 = Gate(gate_name, qubits=[qubits[1]])
         gate_2 = Gate(gate_name, qubits=[qubits[2]])
@@ -300,10 +300,10 @@ class TestCircuitLayers(unittest.TestCase):
 
         for n_qubits in n_qubits_list:
             # Given
-            params = [x for x in range(0, n_qubits)]
+            params = list(range(n_qubits))
             test = cirq.Circuit()
-            qubits = [cirq.LineQubit(x) for x in range(0, n_qubits)]
-            for i in range(0, n_qubits):
+            qubits = [cirq.LineQubit(x) for x in range(n_qubits)]
+            for i in range(n_qubits):
                 test.append(cirq.ry(params[i]).on(qubits[i]))
             u_cirq = test._unitary_()
 
