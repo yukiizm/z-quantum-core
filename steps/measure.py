@@ -57,7 +57,7 @@ def run_circuit_and_measure(
         circuit = circuits.circuit_from_dict(circuit)
 
     measurements = backend.run_circuit_and_measure(circuit, n_samples=n_samples)
-    measurements.save("measurements.json")
+    return measurements
 
 
 def run_circuitset_and_measure(

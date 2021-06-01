@@ -33,7 +33,7 @@ def generate_random_ansatz_params(
         np.random.seed(seed)
 
     params = np.random.uniform(min_value, max_value, number_of_parameters)
-    serialization.save_array(params, "params.json")
+    return params
 
 
 # Combine two sets of ansatz parameters
@@ -64,7 +64,7 @@ def build_ansatz_circuit(
                 "Ansatz is not parametrizable and no parameters has been provided."
             )
         )
-    save_circuit(circuit, "circuit.json")
+    return circuit
 
 
 # Build circuit layers and connectivity
