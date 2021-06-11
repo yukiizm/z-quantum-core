@@ -274,4 +274,8 @@ class AnsatzBasedCostFunction:
             concatenate_expectation_values(expectation_values_list)
         )
 
+        print(f'Parameters: {parameters}')
+        print(f'First circuit: {estimation_tasks[0].circuit}')
+        print(f'Value: {sum_expectation_values(combined_expectation_values)}')
+
         return sum_expectation_values(combined_expectation_values)
