@@ -6,24 +6,42 @@ import tequila.circuit.gates
 
 from .. import _circuit, _gates, _operations
 
-
-def import_from_tequila(circuit: tq.QCircuit) -> _circuit.Circuit:
-    pass
+# TODO: figure out how to handle I & RH gates
 
 
-# TODO: figure out how to handle I gate
+def _tequila_gate_name(zquantum_gate_name):
+    return zquantum_gate_name.lower().capitalize()
 
-ZQUANTUM_NAME_TO_TEQUILA_GATE = {
-    name: getattr(tq.circuit.gates, name)
-    for name in [
-        "X",
-        "Y",
-        "Z",
-        "H",
-        # "I",
-        "S",
-        "T",
-    ]
+
+ZQUANTUM_TEQUILA_MAP = {
+    **{
+        name: getattr(tq.circuit.gates, name)
+        for name in [
+            "X",
+            "Y",
+            "Z",
+            "H",
+            # "I",
+            "S",
+            "T",
+        ]
+    },
+    **{
+        name: getattr(tq.circuit.gates, _tequila_gate_name(name))
+        for name in [
+            "RX",
+            "RY",
+            "RZ",
+            # "RH",
+            "PHASE",
+        ]
+    },
+    "PHASE": lambda angle, qubit: tq.circuit.gates.Phase(
+        target=qubit,
+        control=None,
+        angle=angle,
+    ),
+    "U3": tq.circuit.gates.u3,
 }
 
 
@@ -36,5 +54,5 @@ def _export_operation(operation: _operations.Operation) -> tq.QCircuit:
     if not isinstance(operation, _gates.GateOperation):
         raise TypeError(f"Can't export {type(operation)} to tequila")
 
-    gate_factory = ZQUANTUM_NAME_TO_TEQUILA_GATE[operation.gate.name]
-    return gate_factory(*operation.qubit_indices)
+    gate_factory = ZQUANTUM_TEQUILA_MAP[operation.gate.name]
+    return gate_factory(*operation.params, *operation.qubit_indices)
