@@ -1,5 +1,6 @@
 import operator
 from functools import reduce
+from typing import Callable, Dict
 
 import tequila as tq
 import tequila.circuit.gates
@@ -9,11 +10,8 @@ from .. import _circuit, _gates, _operations
 # TODO: figure out how to handle I & RH gates
 
 
-def _tequila_gate_name(zquantum_gate_name):
-    return zquantum_gate_name.lower().capitalize()
-
-
-ZQUANTUM_TEQUILA_MAP = {
+ZQUANTUM_TEQUILA_MAP: Dict[str, Callable] = {
+    # single-qubit, non-parametric
     **{
         name: getattr(tq.circuit.gates, name)
         for name in [
@@ -26,8 +24,9 @@ ZQUANTUM_TEQUILA_MAP = {
             "T",
         ]
     },
+    # single-qubit, parametric
     **{
-        name: getattr(tq.circuit.gates, _tequila_gate_name(name))
+        name: getattr(tq.circuit.gates, name.lower().capitalize())
         for name in [
             "RX",
             "RY",
@@ -42,6 +41,15 @@ ZQUANTUM_TEQUILA_MAP = {
         angle=angle,
     ),
     "U3": tq.circuit.gates.u3,
+    # two-qubit, non-parametric
+    **{
+        name: getattr(tq.circuit.gates, name)
+        for name in [
+            "CNOT",
+            "CZ",
+            "SWAP",
+        ]
+    },
 }
 
 

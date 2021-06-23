@@ -56,6 +56,21 @@ EQUIVALENT_CIRCUITS = [
         )
         for angle in [0.0, 0.1, np.pi, 2 * np.pi, np.pi / 5, 10 * np.pi]
     ],
+    # all ZQuantum two-qubit, non-parametric gates
+    (
+        circuits.Circuit(
+            [
+                circuits.CNOT(0, 1),
+                circuits.CZ(0, 3),
+                circuits.SWAP(3, 1),
+            ]
+        ),
+        (
+            tq.gates.CNOT(control=0, target=1)
+            + tq.circuit.gates.CZ(control=0, target=3)
+            + tq.circuit.gates.SWAP(3, 1)
+        ),
+    ),
 ]
 
 
