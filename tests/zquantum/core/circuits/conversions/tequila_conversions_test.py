@@ -19,7 +19,6 @@ EQUIVALENT_CIRCUITS = [
                 circuits.Y(0),
                 circuits.Z(4),
                 circuits.H(3),
-                # circuits.I(1),
                 circuits.S(1),
                 circuits.T(1),
             ]
@@ -41,7 +40,6 @@ EQUIVALENT_CIRCUITS = [
                     circuits.RX(angle)(1),
                     circuits.RY(angle)(0),
                     circuits.RZ(angle)(4),
-                    # circuits.RH(angle)(0),
                     circuits.PHASE(angle)(1),
                     circuits.U3(angle, angle + 0.1, angle - 0.3)(0),
                 ]
@@ -71,6 +69,18 @@ EQUIVALENT_CIRCUITS = [
             + tq.circuit.gates.SWAP(3, 1)
         ),
     ),
+    # all ZQuantum two-qubit, parametric gates
+    *[
+        (
+            circuits.Circuit(
+                [
+                    circuits.CPHASE(angle)(1, 3),
+                ]
+            ),
+            (tq.circuit.gates.Phase(target=3, control=1, angle=angle)),
+        )
+        for angle in [0.0, 0.1, np.pi, 2 * np.pi, np.pi / 5, 10 * np.pi]
+    ],
 ]
 
 

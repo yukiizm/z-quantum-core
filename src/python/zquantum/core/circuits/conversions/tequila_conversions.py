@@ -7,7 +7,14 @@ import tequila.circuit.gates
 
 from .. import _circuit, _gates, _operations
 
-# TODO: figure out how to handle I & RH gates
+# TODO: figure out how to handle ZQuantum gates that aren't implemented in tequila:
+# - I
+# - RH
+# - ISWAP
+# - XX
+# - YY
+# - ZZ
+# - XY
 
 
 ZQUANTUM_TEQUILA_MAP: Dict[str, Callable] = {
@@ -19,7 +26,6 @@ ZQUANTUM_TEQUILA_MAP: Dict[str, Callable] = {
             "Y",
             "Z",
             "H",
-            # "I",
             "S",
             "T",
         ]
@@ -31,7 +37,6 @@ ZQUANTUM_TEQUILA_MAP: Dict[str, Callable] = {
             "RX",
             "RY",
             "RZ",
-            # "RH",
             "PHASE",
         ]
     },
@@ -50,6 +55,12 @@ ZQUANTUM_TEQUILA_MAP: Dict[str, Callable] = {
             "SWAP",
         ]
     },
+    # two-qubit, parametric
+    "CPHASE": lambda angle, control, target: tq.circuit.gates.Phase(
+        target=target,
+        control=control,
+        angle=angle,
+    ),
 }
 
 
