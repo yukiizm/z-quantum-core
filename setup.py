@@ -2,6 +2,8 @@ import os
 
 import setuptools
 
+from codecs import open
+
 dev_requires = [
     "pytest>=3.7.1",
     "pytest-cov>=2.5.1",
@@ -21,12 +23,12 @@ def _this_path():
 
 
 def _read_readme():
-    with open(os.path.join(_this_path(), "README.md")) as f:
+    with open(os.path.join(_this_path(), "README.md"), 'r', encoding='utf8') as f:
         return f.read()
 
 
 def _read_version():
-    with open(os.path.join(_this_path(), "VERSION")) as f:
+    with open(os.path.join(_this_path(), "VERSION"), 'r', encoding='utf8') as f:
         return f.read().strip()
 
 
